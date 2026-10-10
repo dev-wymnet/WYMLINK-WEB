@@ -6,6 +6,7 @@ import { IoIosMenu } from "react-icons/io";
 import { useState, useEffect } from "react";
 import { App_Button } from "../ui_components/app_button";
 import { useRouter } from "next/navigation";
+import { appName } from "@/data/constants/app_name";
 
 const Nav_Bar = ({ logo = false }: { logo?: boolean }) => {
   const [mobileNav, setMobileNav] = useState(false);
@@ -41,7 +42,7 @@ const Nav_Bar = ({ logo = false }: { logo?: boolean }) => {
                 href={"/"}
                 className="text-2xl font-bold text-primary hover:text-primary/80 transition-colors"
               >
-                Wymnet
+                {appName}
               </Link>
             </div>
 
@@ -77,7 +78,7 @@ const Nav_Bar = ({ logo = false }: { logo?: boolean }) => {
         <div className="containerclass flex flex-col h-full py-6">
           <div className="flex items-center justify-between mb-8">
             <Link href={"/"} className="text-2xl font-bold text-primary">
-              Wymnet
+              {appName}
             </Link>
             <button
               onClick={() => setMobileNav(false)}

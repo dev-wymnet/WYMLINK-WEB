@@ -11,6 +11,7 @@ import Footer from '@/src/components/layout/Footer'
 import Image from 'next/image'
 import { Logo } from '@/assets'
 import FeaturedFullWidth from '@/src/components/blog/FeaturedFullWidth'
+import { appName } from '@/data/constants/app_name'
 // import Logo from '@/src/assets/images/logo.png'
 
 export const revalidate = 60
@@ -61,7 +62,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
         </div>
 
         <header className="mb-10">
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Updates On Wymnet</h1>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Updates On {appName}</h1>
           <p className="mt-3 max-w-2xl text-base md:text-lg text-muted-foreground">News, ideas and perspectives from our team and the ecosystem.</p>
         </header>
         <section className="mb-12">

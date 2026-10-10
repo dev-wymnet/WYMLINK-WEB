@@ -9,6 +9,8 @@ import Easy_Bill from "./home_view_components/Easy_Bill";
 import Home_Hero from "./Home_Hero";
 import Nav_Bar from "../../components/layout/Nav_bar";
 import Make_Payment from "../../components/Make_Payment";
+import Footer from "@/components/layout_components/footer";
+// import Footer from "@/src/components/layout/Footer";
 
 const Home_View = () => {
   return (
@@ -76,6 +78,7 @@ const Home_View = () => {
         </section> */}
         {/* <Price /> */}
         <Home_Footer />
+        <Footer/>
       </section>
     </>
   );

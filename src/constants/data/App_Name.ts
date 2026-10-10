@@ -1,3 +1,3 @@
-const appName = "Wymnet";
+const appName = "Wymlink";
 
 export default appName;

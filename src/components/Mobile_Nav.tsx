@@ -5,6 +5,7 @@ import { HELP, PAYMENT, REWARD } from "../constants/data/Nav_Data";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
 import Link from "next/link";
+import { appName } from "@/data/constants/app_name";
 
 interface MobileNavProps {
   openMobileNav: boolean;
@@ -101,7 +102,7 @@ const MobileNav = ({
         <div className="flex items-center justify-between px-4 pt-4">
           <div className="flex items-center">
             <Link href={"/"}>
-              {/* <Image src={BlueLogo} alt="logo" className="h-[60px] w-auto" /> */}Wymnet
+              {/* <Image src={BlueLogo} alt="logo" className="h-[60px] w-auto" /> */}{appName}
             </Link>
           </div>
           <button

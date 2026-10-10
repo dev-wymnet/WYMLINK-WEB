@@ -9,7 +9,6 @@ const Footer = () => {
         <section className="flex flex-col md:flex-row lg:gap-30 gap-8 font-instrumentSans">
           <div className="md:w-[40%] flex flex-col gap-3">
             <Link href={"/"}>
-              {/* <img src={Logo} alt="logo" className="w-fit h-fit" /> */}
             </Link>
             <p className="md:w-[90%]">
               {appName} provides innovative solutions that simplify financial
@@ -19,7 +18,7 @@ const Footer = () => {
           <div className="flex-1 flex flex-col gap-8 md:flex-row justify-between">
             {Footer_Data.map((data) => (
               <div className="flex flex-col gap-3">
-                <h5 className="text-[#FD5E1D]">{data.title}</h5>
+                <h5 className="text-[#0B40EE]">{data.title}</h5>
                 {data.subLinks.map((link, idx) => (
                   <div key={idx}>
                     {link.href ? (
