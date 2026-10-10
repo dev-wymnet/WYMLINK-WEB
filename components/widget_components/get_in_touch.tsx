@@ -13,7 +13,7 @@ const GetInTouch = (props: any) => {
           Still have questions?
         </h3>
         <p className="text-[#667085] text-[12px] lg:text-[18px] mb-[2rem]">
-          Can't find the answer you're looking for? Please chat to our friendly
+          Can&apos;t find the answer you&apos;re looking for? Please chat to our friendly
           team.
         </p>
         <Link

@@ -7,6 +7,7 @@ import Nav_Bar from "@/src/components/layout/Nav_bar";
 import { registerForTraining } from "@/features/training/api/training.api";
 import { getApiErrorMessage } from "@/features/auth/api/auth_endpoints";
 import { FooterImage, GlobalBg } from "@/src/assets";
+import { appName } from "@/data/constants/app_name";
 
 interface FormState {
   fullName: string;
@@ -368,7 +369,7 @@ const AIWorkflowAutomationPage = () => {
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 px-4 md:flex-row md:items-center md:px-6 lg:px-8">
           <div className="flex-1 space-y-6">
             <p className="inline-flex items-center rounded-full bg-slate-900/60 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-400/40">
-              Wymnet Cybersecurity Program · Abuja · Hybrid Learning
+              {appName} Cybersecurity Program · Abuja · Hybrid Learning
             </p>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
               Build a Career in{" "}
@@ -399,7 +400,7 @@ const AIWorkflowAutomationPage = () => {
             <div className=" mt-4 grid gap-3 text-xs text-slate-300 sm:grid-cols-3 sm:text-sm ">
               <div>
                 <p className=" font-medium text-slate-100 "> Organizer </p>
-                <p> Wymnet </p>
+                <p> {appName} </p>
               </div>
               <div>
                 <p className=" font-medium text-slate-100 "> Mode </p>
@@ -468,7 +469,7 @@ const AIWorkflowAutomationPage = () => {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Why Learn Cybersecurity with Wymnet?
+                Why Learn Cybersecurity with {appName}?
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-slate-300">
                 This program combines fundamentals, technical security
@@ -485,7 +486,7 @@ const AIWorkflowAutomationPage = () => {
               "Career-focused specialization tracks",
               "Industry-aligned curriculum (NIST, ISO 27001, OWASP)",
               "Guidance from experienced security practitioners",
-              "Certificate of completion from Wymnet",
+              `Certificate of completion from ${appName}`,
             ].map((item) => (
               <div
                 key={item}
@@ -712,7 +713,7 @@ const AIWorkflowAutomationPage = () => {
                     <div className="flex items-center justify-between">
                       <span>Account Name</span>
                       <span className="font-medium text-right">
-                        Wymnet Data Solutions
+                        {appName} Data Solutions
                       </span>
                     </div>
                     <div className="flex items-center justify-between gap-2">
@@ -735,7 +736,7 @@ const AIWorkflowAutomationPage = () => {
                   <p className="mt-4 text-[11px] leading-relaxed text-emerald-200/90">
                     After payment, take a screenshot of your registration
                     confirmation and payment receipt, then send both to the
-                    Wymnet support team for verification.
+                    {appName} support team for verification.
                   </p>
                 </div>
               </div>
@@ -778,7 +779,7 @@ const AIWorkflowAutomationPage = () => {
                   <p className="font-semibold">Important:</p>
                   <p className="mt-1">
                     Please screenshot this confirmation together with your
-                    payment receipt and send both to the Wymnet support team for
+                    payment receipt and send both to the {appName} support team for
                     payment confirmation.
                   </p>
                 </div>
@@ -885,7 +886,7 @@ const AIWorkflowAutomationPage = () => {
                   </button>
 
                   <p className="mt-2 text-[11px] text-slate-400">
-                    By registering, you consent to be contacted by the Wymnet
+                    By registering, you consent to be contacted by the {appName}
                     team with program details and updates.
                   </p>
                 </form>

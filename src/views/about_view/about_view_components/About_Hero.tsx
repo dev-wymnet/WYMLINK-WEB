@@ -7,7 +7,7 @@ const About_Hero = () => {
   return (
     <div className="flex items-center justify-center flex-col">
       <h1 className="xl:text-[100px] md:text-[60px] text-[40px] text-primary font-[700] font-aeonik text-center xl:leading-[104px] lg:leading-[90px] md:leading-[64px] leading-[44px]">
-        Payment Revolution with {appName}
+        Moving Money Forward with {appName}
       </h1>
       <div className="flex justify-center xl:mt-[4rem] w-full lg:justify-center lg:flex-row items-center my-6 lg:w-full">
         <Link href="/auth/login" target="_blank" className="">

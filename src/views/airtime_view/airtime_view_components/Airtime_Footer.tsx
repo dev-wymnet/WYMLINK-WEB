@@ -17,10 +17,10 @@ const Airtime_Footer = () => {
         imgSm: iPhoneMockUp as any,
       }}
       bgColor="bg-[#F4F8FC]"
-      title={`Boldly: Pay Bills with Your Full Chest!`}
+      title={`Pay Bills with Confidence — Right From Your Wallet`}
       titleStyle="font-[900]"
-      details={`Pay bills, shop online, and send money across the globe all from one powerful app.
-Wymnet brings everything you need into one place, making your financial life easier, faster, and more connected.`}
+      details={`Top up airtime and data, renew cable TV, buy electricity, and send money to any Nigerian bank — all from one powerful app.
+${appName} brings everything you need into one place, making your financial life easier, faster, and more connected.`}
       btn={{
         btnStyles: "text-white bg-[#0067F5]",
         btnText: "Recharge Now",

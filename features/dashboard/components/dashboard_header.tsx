@@ -18,7 +18,7 @@ export const DashboardHeader = ({ fullName }: DashboardHeaderProps) => {
           {greeting}, {firstName}
         </App_Text>
         <App_Text variant="body" className="mt-1 text-secondary">
-          Here's what's happening with your wallet.
+          Here&apos;s what&apos;s happening with your wallet.
         </App_Text>
       </div>
       <Link

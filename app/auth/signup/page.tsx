@@ -4,7 +4,7 @@ import { Signup_Form } from "@/features/auth/components/signup_form";
 export default function SignupPage() {
   return (
     <Auth_Shell
-      subtitle="Create your profile and start managing payments with a secure session."
+      subtitle="Create your free account and start sending money and paying bills in minutes."
       title="Create your account"
     >
       <Signup_Form />

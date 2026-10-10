@@ -19,7 +19,7 @@ const Download_Footer = ({ bgColor, textColor}: Footer_Props) => {
         className={`w-full flex flex-col items-center justify-center py-10 max-md:hidden gap-[15px] py-[7%] px-[10%] ${bgColor}`}
       >
         <h2 className={`text-[70px] font-[900] ${textColor} leading-none text-center font-aeonik w-[80%] space-x-0 space-y-0 gap-0 mb-10`}>
-            Bold: Digital <br /> Banking, Anywhere
+            {appName}: Payments <br /> That Just Work
         </h2>
         <div className="flex items-center">
           <Link 
@@ -44,8 +44,8 @@ const Download_Footer = ({ bgColor, textColor}: Footer_Props) => {
             Download {appName} App
           </h4>
           <p className="text-[14px] font-[400] mb-6">
-            Take control of your savings journey. Enjoy a seamless experience as
-            you build your financial future, one step at a time.
+            Send money to any Nigerian bank, receive payments, and pay all your
+            bills — from one simple wallet.
           </p>
           <div className="flex items-center">
             <Link

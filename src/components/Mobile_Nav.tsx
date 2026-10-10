@@ -121,11 +121,6 @@ const MobileNav = ({
               <p>Personal</p>
             </Link>
           </div>
-          <div className="bg-[#E6EEFC] text-[#101828] py-2 px-8 rounded-lg">
-            <Link href={""}>
-              <p>Business</p>
-            </Link>
-          </div>
         </div>
         <div className="flex-1 overflow-y-auto gap-4 p-4">
           {renderNavSection(
@@ -161,7 +156,7 @@ const MobileNav = ({
             className="flex items-center py-3 text-[16px] font-[600] text-gray-900"
           >
             <button className="w-full bg-[#101828] text-white text-[16px] font-[600] py-[10px] px-[18px] rounded-lg">
-              Get started — It's free
+              Get started — It&apos;s free
             </button>
           </Link>
         </div>

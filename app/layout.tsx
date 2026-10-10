@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { appName } from "@/data/constants/app_name";
 import { App_Providers } from "@/app/providers";
 import Scroll_To_Top from "@/components/layout_components/scroll_to_top";
 import AOSInit from "@/components/layout_components/AOSInit";
@@ -16,8 +17,39 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wynmet",
-  description: "",
+  title: {
+    default: `${appName} | Send Money & Pay Bills in Nigeria`,
+    template: `%s | ${appName}`,
+  },
+  description: `${appName} is the smarter way to move money in Nigeria. Send money instantly from your ${appName} wallet to any Nigerian bank account, receive money, and pay bills — airtime, data, cable TV and electricity — all in one app.`,
+  keywords: [
+    `${appName}`,
+    "send money Nigeria",
+    "money transfer Nigeria",
+    "NGN wallet",
+    "bank transfer app Nigeria",
+    "receive money Nigeria",
+    "pay bills online Nigeria",
+    "buy airtime online",
+    "buy data bundles",
+    "cable TV subscription payment",
+    "electricity bill payment",
+    "instant bank transfer",
+    "fintech Nigeria",
+    "digital wallet Nigeria",
+    "bill payment app",
+  ],
+  openGraph: {
+    title: `${appName} | Send Money & Pay Bills in Nigeria`,
+    description: `Send money instantly to any Nigerian bank account, receive money, and pay airtime, data, cable TV and electricity bills — all from your ${appName} wallet.`,
+    type: "website",
+    siteName: appName,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${appName} | Send Money & Pay Bills in Nigeria`,
+    description: `Send money instantly to any Nigerian bank account, receive money, and pay airtime, data, cable TV and electricity bills — all from your ${appName} wallet.`,
+  },
   icons: {
     icon: "/assets/images/logo.png",
   },

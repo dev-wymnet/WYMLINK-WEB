@@ -3,6 +3,7 @@
 import { Fragment } from "react";
 import Nav_Bar from "@/src/components/layout/Nav_bar";
 import Footer from "@/src/components/layout/Footer";
+import { appName } from "@/data/constants/app_name";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -29,7 +30,7 @@ export default function PrivacyPolicyPage() {
 
         <section className="prose prose-slate max-w-none">
           <p className="text-base leading-7 text-secondary">
-            This Privacy Policy explains how WymLink collects, uses, stores, and protects information when you use the WymLink web application and related services.
+            This Privacy Policy explains how {appName} collects, uses, stores, and protects information when you use the {appName} web application and related services.
           </p>
         </section>
 
@@ -37,7 +38,7 @@ export default function PrivacyPolicyPage() {
           <section className="bg-surface border border-border rounded-xl p-6">
             <h2 className="text-xl font-semibold text-secondary mb-3">Information We Collect</h2>
             <p className="mb-3 text-secondary/90">
-              We may collect the following categories of information when you use WymLink:
+              We may collect the following categories of information when you use {appName}:
             </p>
             <ul className="list-disc pl-5 space-y-1 text-secondary/90">
               <li>Personal information</li>
@@ -109,7 +110,7 @@ export default function PrivacyPolicyPage() {
               <li>Request correction of information</li>
               <li>Request deletion where legally applicable</li>
               <li>Manage your account information and preferences</li>
-              <li>Contact WymLink regarding privacy concerns</li>
+              <li>Contact {appName} regarding privacy concerns</li>
             </ul>
           </section>
 
@@ -123,12 +124,12 @@ export default function PrivacyPolicyPage() {
           <section className="bg-surface border border-border rounded-xl p-6">
             <h2 className="text-xl font-semibold text-secondary mb-3">Third-Party Services</h2>
             <p className="text-secondary/90">
-              WymLink may integrate with third-party providers to deliver certain features. These providers may process information according to their own privacy policies.
+              {appName} may integrate with third-party providers to deliver certain features. These providers may process information according to their own privacy policies.
             </p>
           </section>
 
           <section className="bg-surface border border-border rounded-xl p-6">
-            <h2 className="text-xl font-semibold text-secondary mb-3">Children's Privacy</h2>
+            <h2 className="text-xl font-semibold text-secondary mb-3">Children&apos;s Privacy</h2>
             <p className="text-secondary/90">The service is not intended for children.</p>
           </section>
 

@@ -6,8 +6,8 @@ const Transfer_Hero = () => {
   return (
     <>
       <Hero
-        title={"Local and International Money Transfers"}
-        subText={`Send money the smarter way with ${appName}. Make instant, secure transfers to any local bank account with ease and confidence.`}
+        title={"Send Money to Any Nigerian Bank Account"}
+        subText={`Send money the smarter way with ${appName}. Move naira from your wallet to any bank account in Nigeria — instantly, securely, and with total confidence.`}
         img={SendMoneyPng}
         btnText={`Download Now`}
         styles={{

@@ -4,7 +4,7 @@ import { Login_Form } from "@/features/auth/components/login_form";
 export default function LoginPage() {
   return (
     <Auth_Shell
-      subtitle="Sign in to access your account, wallets, and transaction tools."
+      subtitle="Sign in to send money, pay bills, and manage your wallet."
       title="Welcome back"
     >
       <Login_Form />

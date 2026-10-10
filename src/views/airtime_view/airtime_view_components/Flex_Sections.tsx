@@ -19,8 +19,7 @@ const Flex_Sections = () => {
           title={"Explore all network providers"}
           details={`${appName} seamlessly integrates with leading telecom networks, ensuring you're always connected, wherever you go!`}
           details2={`Top up any line, anytime.
-Wymnet lets you buy airtime for all major Nigerian networks, MTN, Airtel, Glo, and 9mobile in seconds, straight from your wallet. Enjoy 2%
-cash backs on all networks.`}
+${appName} lets you buy airtime for all major Nigerian networks — MTN, Airtel, Glo, and 9mobile — in seconds, straight from your wallet.`}
           btn={{
             btnStyles: "bg-transparent text-[#0067F5] text-[18px]",
             btnText: "Recharge Now",

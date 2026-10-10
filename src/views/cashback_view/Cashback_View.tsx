@@ -111,7 +111,7 @@ const Cashback_View = () => {
           container: "bg-[#753FF6]",
         }}
         title={`Join ${appName} Today`}
-        subText={`Start earning 2% cashback on your bill payments and transactions today. Download the ${appName} app now and experience the convenience and rewards of Bold Cashback firsthand`}
+        subText={`Start earning 2% cashback on your bill payments and transactions today. Download the ${appName} app now and experience the convenience and rewards of ${appName} Cashback firsthand`}
       />
     </>
   );

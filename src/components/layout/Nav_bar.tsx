@@ -99,7 +99,7 @@ const Nav_Bar = ({
                   : "border-black border"
             } hidden lg:block text-sm font-medium px-4 py-2 rounded-sm`}
           >
-            Get started — It's free
+            Get started — It&apos;s free
           </Link>
 
           <button className="lg:hidden" onClick={() => setOpenMobileNav(true)}>

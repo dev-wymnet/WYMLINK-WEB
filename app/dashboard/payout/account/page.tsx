@@ -28,7 +28,7 @@ export default function PayoutAccountPage() {
   return (
     <div className="mx-auto w-full max-w-2xl p-4">
       <h1 className="mb-2 text-2xl font-bold">Send money</h1>
-      <p className="mb-6 text-sm text-muted-foreground">Choose the recipient's bank and enter their 10-digit account number. We'll confirm the account name before you continue.</p>
+      <p className="mb-6 text-sm text-muted-foreground">Choose the recipient&apos;s bank and enter their 10-digit account number. We&apos;ll confirm the account name before you continue.</p>
 
       <form className="flex flex-col gap-4" onSubmit={onContinue}>
         <div>

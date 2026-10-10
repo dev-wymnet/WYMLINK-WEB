@@ -2,17 +2,17 @@
 import Feature_Card from "./Feature_Card";
 import { Circle_Cards_Container } from "./Circle_Cards";
 import Bulk_Transfer_Icon from "../../../assets/svgs/home/Bulk_Transfer_Icon";
-import Dollar_Wallet_Icon from "../../../assets/svgs/home/Dollar_Wallet_Icon";
-import Virtual_Icon from "../../../assets/svgs/home/Virtual_Icon";
-import Saving_Icon from "../../../assets/svgs/home/Saving_Icon";
+import Airtime_Icon from "../../../assets/svgs/Airtime_Icon";
+import Cable_Icon from "../../../assets/svgs/Cable_Icon";
+import Power_Icon from "../../../assets/svgs/Power_Icon";
 import Note_Icon from "../../../assets/svgs/home/Note_Icon";
 import Purse_Icon from "../../../assets/svgs/home/Purse_Icon";
 import appName from "../../../constants/data/App_Name";
 const circleCardsData = [
-  { text: "Bulk Transfer", image: Bulk_Transfer_Icon },
-  { text: "Dollar Wallet", image: Dollar_Wallet_Icon },
-  { text: "Virtual Cards", image: Virtual_Icon },
-  { text: "Savings", image: Saving_Icon },
+  { text: "Bank Transfers", image: Bulk_Transfer_Icon },
+  { text: "Airtime & Data", image: Airtime_Icon },
+  { text: "Cable TV", image: Cable_Icon },
+  { text: "Electricity", image: Power_Icon },
 ];
 
 const Easy_Bill = () => {
@@ -25,8 +25,8 @@ const Easy_Bill = () => {
         descriptionClass="text-[12px]"
         imageSrc={Note_Icon}
         imageAlt="bill"
-        title="Easy Bill payment"
-        description={`Simplify your bill payments with the ${appName} App - quick, secure, and hassle-free`}
+        title="Easy bill payments"
+        description={`Pay airtime, data, cable TV and electricity bills with the ${appName} app — quick, secure, and hassle-free`}
         aosAnimation="fade-right"
         aosDuration="1500"
       />
@@ -52,8 +52,8 @@ const Easy_Bill = () => {
         descriptionClass="text-[12px]"
         imageSrc={Purse_Icon}
         imageAlt="bill"
-        title="Quick money transfer"
-        description={`Swiftly transfer money with the ${appName} App - making your transactions faster and smoother`}
+        title="Instant bank transfers"
+        description={`Send money from your ${appName} wallet to any Nigerian bank account — fast, smooth, and secure`}
         aosAnimation="fade-right"
         aosDuration="1500"
       />

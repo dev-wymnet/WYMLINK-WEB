@@ -8,19 +8,19 @@ interface Question {
 const frequentQuestions: Question[] = [
   {
     title: `How do I pay for DStv, GOtv, or Startimes on ${appName}?`,
-    content: `Open the Wymnet app, go to the "Cable TV" section, choose your service provider (e.g., DStv, GOtv, Startimes), enter your smartcard or IUC number, select a package, and complete your payment.`,
+    content: `Open the ${appName} app, go to the "Cable TV" section, choose your service provider (e.g., DStv, GOtv, Startimes), enter your smartcard or IUC number, select a package, and complete your payment.`,
   },
   {
     title: `Which cable TV providers can I pay for using ${appName}?`,
-    content: `You can subscribe to DStv, GOtv, and Startimes directly from the Wymnet app.`,
+    content: `You can subscribe to DStv, GOtv, and Startimes directly from the ${appName} app.`,
   },
   {
     title: `How much does it cost to renew my cable subscription?`,
-    content: `You only pay the standard subscription fee for your selected package. Wymnet does not charge extra service fees.`,
+    content: `You only pay the standard subscription fee for your selected package. ${appName} does not charge extra service fees.`,
   },
   {
-    title: `How quickly are airtime and data purchases processed?`,
-    content: `Airtime and data purchases are instant on ${appName}.`,
+    title: `Can I pay for someone else's cable TV subscription?`,
+    content: `Yes. As long as you have the correct smartcard or IUC number, you can renew any DStv, GOtv, or Startimes subscription with ${appName}.`,
   },
   {
     title: `How quickly is my subscription activated after payment?`,

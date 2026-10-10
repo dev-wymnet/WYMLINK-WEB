@@ -2,20 +2,13 @@
 import { Home_Hero_Image } from "@/assets";
 import Hero from "@/components/card_components/hero";
 import { appName } from "@/data/constants/app_name";
-import { Use_Auth_Context } from "@/features/auth/api/auth_context";
 
 const Home_Hero = () => {
-  const { user } = Use_Auth_Context();
-  const cc = (user?.countryCode ?? "NG").toUpperCase();
-  const localizedSubtext =
-    cc === "CA"
-      ? `Stay connected with easy airtime and internet data purchases. ${appName} supports Canadian operators via Reloadly.`
-      : `Stay connected with easy airtime and internet data purchases. ${appName} covers all mobile networks and major internet service providers in Nigeria.`;
   return (
     <>
       <Hero
         title={"Buy Airtime and Internet Data"}
-        subText={localizedSubtext}
+        subText={`Stay connected with easy airtime and internet data purchases. ${appName} covers all mobile networks and major internet service providers in Nigeria.`}
         img={Home_Hero_Image as any}
         btnText={"Get Started"}
         styles={{

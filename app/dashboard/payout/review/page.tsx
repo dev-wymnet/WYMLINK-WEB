@@ -3,6 +3,7 @@
 import { App_Button } from "@/components/ui_components/app_button";
 import { TransactionPinModal } from "@/features/payouts/components/TransactionPinModal";
 import { usePayout } from "@/features/payouts/state/usePayout";
+import { appName } from "@/data/constants/app_name";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
@@ -58,7 +59,7 @@ function PayoutReviewInner() {
       </p>
 
       <div className="mb-4 rounded-lg border bg-white p-4">
-        <div className="text-xs text-gray-500">You're sending</div>
+        <div className="text-xs text-gray-500">You&apos;re sending</div>
         <div className="text-3xl font-bold">
           ₦
           {Number(amount).toLocaleString("en-NG", {
@@ -67,7 +68,7 @@ function PayoutReviewInner() {
           })}
         </div>
         <div className="mt-2 inline-flex items-center gap-2 rounded-full bg-gray-100 px-2 py-1 text-xs text-gray-700">
-          <span className="h-1.5 w-1.5 rounded-full bg-primary" /> WymLink
+          <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {appName}{" "}
           Wallet
         </div>
       </div>
@@ -95,7 +96,7 @@ function PayoutReviewInner() {
         <div className="rounded-lg border bg-white p-3">
           <div className="flex items-center justify-between py-2 text-sm">
             <span className="text-gray-500">From</span>
-            <span>WymLink Wallet</span>
+            <span>{appName} Wallet</span>
           </div>
           <div className="h-px w-full bg-gray-100" />
           <div className="flex items-center justify-between py-2 text-sm">

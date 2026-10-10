@@ -14,7 +14,7 @@ export const FooterTopData = [
       },
       {
         href: ROUTES.CABLE,
-        name: "Tv Cable",
+        name: "Cable TV",
       },
       {
         href: ROUTES.AIRTIME,
@@ -30,38 +30,8 @@ export const FooterTopData = [
         href: ROUTES.TRANSFER,
         name: "Send Money",
       },
-      // {
-      //   href: ROUTES.VIRTUAL,
-      //   name: "Virtual Card",
-      // },
-      // {
-      //   href: ROUTES.LOAN,
-      //   name: "Loan",
-      // },
-      // {
-      //   href: "/bulk",
-      //   name: "Bulk Transfer",
-      // },
     ],
   },
-  // {
-  //   width: 10,
-  //   title: "Rewards & Earn",
-  //   listItems: [
-  //     {
-  //       href: "/bonus",
-  //       name: "Referral Bonus",
-  //     },
-  //     {
-  //       href: "/cashback",
-  //       name: "Cashbacks",
-  //     },
-  //     {
-  //       href: "/bonus",
-  //       name: "Bonus",
-  //     },
-  //   ],
-  // },
   {
     width: 10,
     title: "Company",
@@ -75,9 +45,8 @@ export const FooterTopData = [
         name: "Contact Us",
       },
       {
-        href: "https://wymnet.org",
+        href: "/blog",
         name: "Blog",
-        target: "_blank",
       },
     ],
   },
@@ -94,9 +63,8 @@ export const FooterTopData = [
         name: "FAQs",
       },
       {
-        href: "",
+        href: ROUTES.CONTACT,
         name: "Knowledge Base",
-        target: "_blank",
       },
     ],
   },

@@ -7,8 +7,8 @@ const Tobi_Experience = () => {
     <>
         <Full_Flex 
           img={EasyMangeImage} 
-          title="Tobi's Bold Move: Paying for TV Cable in Style"
-          details={`Experience the bold choice in payments with the ${appName} app, as exemplified by Tobi who, paying for his TV cable in style, enjoyed instant transactions, enhanced security, and a user-friendly interface, inviting you to join the ${appName} Movement for a uniquely seamless financial experience.`} 
+          title="Tobi's Smart Move: Paying for TV Cable in Style"
+          details={`Experience the smart choice in payments with the ${appName} app, as exemplified by Tobi who, paying for his TV cable in style, enjoyed instant transactions, enhanced security, and a user-friendly interface, inviting you to join the ${appName} Movement for a uniquely seamless financial experience.`} 
           btnText={'Join Tobi'}
           styles={
               {

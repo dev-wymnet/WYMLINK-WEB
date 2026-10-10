@@ -13,7 +13,7 @@ const Cashback_Hero = () => {
         title={"Cashback and Bonus Rewards"}
         subText={`With the ${appName} app, every bill payment and transaction earns you cashback and bonus rewards, transforming ordinary expenses into valuable savings opportunities.`}
         img={Gift}
-        btnText={"Get Card Now"}
+        btnText={"Get Started"}
         styles={{
           container: "text-white",
           btn: "bg-[#EEFFDE] w-[190px] max-md:px-10 py-[17px] rounded-[4px] font-[300] text-center",

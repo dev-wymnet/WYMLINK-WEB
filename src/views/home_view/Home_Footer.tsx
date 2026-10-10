@@ -9,11 +9,12 @@ const Home_Footer = () => {
       <div className="flex containerclass justify-between items-center w-[95%] max-w-screen-2lg 3xl:max-w-xlg mx-auto text-white xmd:border-2 border-[#EEFFDE33] rounded-2xl py-12 xmd:px-16 text-center xmd:text-start">
         <div className="w-full xmd:w-[60%] flex flex-col gap-6">
           <p className="text-4xl lg:text-5xl max-xm:w-[80%] mx-auto font-[600] xmd:leading-snug">
-            Bills, Transfers — Local & Global. One App.
+            Transfers, Airtime, Data & Bills. One App.
           </p>
           <p className="w-[90%] mx-auto xmd:ml-0 text-[18px] xmd:leading-snug">
-            From utility bills to global transfers and virtual card payments,{" "}
-            {appName} gives you full financial control.
+            Send money to any Nigerian bank, receive payments, and knock out
+            your bills in seconds — {appName} gives you full control of your
+            money.
           </p>
           <Link
             href={"/auth/login"}

@@ -9,7 +9,7 @@ const Send_Money_Easily = () => {
     <div className="pb-[30px] xmd:py-20 bg-[#f9fafe]">
       <div className="max-w-screen-2lg 3xl:max-w-xlg w-[95%] mx-auto">
         <First_Section_Heading
-          title={`Transfer Easily Between ${appName} Accounts`}
+          title={`Send & Receive Money Between ${appName} Wallets`}
           description=""
           containerClass=""
           headingStyle="text-[#191919FF] font-[800] mb-5 mt-5 max-w-[800px] xmd:leading-[65px] xmd:text-[65px] text-3xl max-xmd:py-[35px]font-aeonik"
@@ -21,7 +21,7 @@ const Send_Money_Easily = () => {
           <div className="flex w-full xmd:w-[55%] flex-col gap-3">
             <Text_Image2
               title="Zero Transaction Fees"
-              text={`Enjoy fee-free transfers between ${appName} accounts, saving you money on transaction costs while providing a seamless and economical way to manage your finances.`}
+              text={`Enjoy fee-free transfers between ${appName} wallets — the fastest, most affordable way to send and receive money with the people you trust.`}
               link="Send money"
               linkStyle="text-[#EEFFDE] absolute bottom-5"
               img={ZeroFees}
@@ -36,9 +36,9 @@ const Send_Money_Easily = () => {
               bomrow
             />
             <Text_Image2
-              title="Zero Transaction Fees"
-              text={`Transfer funds between ${appName} accounts completely free of charge, helping you avoid transaction fees while enjoying a seamless and cost-effective way to manage your money.`}
-              link="Transfer money"
+              title="Receive Money Instantly"
+              text={`Share your ${appName} wallet details and get paid instantly — every inflow lands in your wallet in seconds, ready to spend or send on.`}
+              link="Fund your wallet"
               linkStyle="text-[#1F2C3BFF] absolute bottom-5"
               img={DropdownMenu}
               colors={{

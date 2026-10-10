@@ -50,7 +50,7 @@ const Our_Team = () => {
           <div className="rounded-[20px]">
             <Image
               src={BoldMen}
-              alt="bold men"
+              alt="Wymlink team members"
               className="w-full h-full rounded-[20px]"
             />
           </div>
@@ -92,7 +92,7 @@ const Our_Team = () => {
           <div className="rounded-[20px]">
             <Image
               src={BoldMen}
-              alt="bold men"
+              alt="Wymlink team members"
               className="w-full h-full rounded-[20px]"
             />
           </div>

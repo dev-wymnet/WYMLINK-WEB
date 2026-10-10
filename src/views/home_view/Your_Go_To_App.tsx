@@ -20,29 +20,29 @@ const cardItems = [
     imageWidth: "",
   },
   {
-    text: `Send money to ${appName} account or other banks`,
+    text: `Send money instantly to any Nigerian bank account`,
     image: MoneyTransfer,
     imageWidth: "",
     width: 356,
     height: 186,
   },
   {
-    text: "Collect Loan of Up To ₦500,000 ",
+    text: "Receive money straight into your wallet",
     image: ConverMoney,
     imageWidth: "",
   },
   {
-    text: "Save and earn competitive interest ",
+    text: "Fund your wallet in seconds",
     image: LockedCard,
     imageWidth: "",
   },
   {
-    text: "Convert currency at the most favourable rate ",
+    text: "Top up airtime & data on every network",
     image: StackCard,
     imageWidth: "",
   },
   {
-    text: `Get rewarded using ${appName} App`,
+    text: `Get rewarded every time you use ${appName}`,
     image: GiftCard,
     imageWidth: "",
   },
@@ -72,13 +72,13 @@ const Your_Go_To_App = ({ handleClick }: goToProps) => {
           <div className="flex flex-col xmd:flex-row gap-10 pt-12 justify-between  border-b border-b-[#FFFFFF] relative text-white">
             <div className="md:w-[70%] xmd:w-[60%] flex flex-col justify-center gap-8">
               <h3 className="xl:text-[60px] xl:text-left xl:leading-[64px] lg:text-[56px] lg:leading-[59px] xmd:text-[40px] font-[500] text-left text-[36px] leading-[44px] font-aeonik">
-                Effortlessly spend globally, In One App
+                Everything your money needs, in one app
               </h3>
               <p className="font-[200]">
-                With {appName}, enjoy the best FX rates, access to Global
-                Banking, and experience Next-Gen Payment Features like Snap &
-                Pay. From Bill Payments to USD Wallets, Quick Loans to Virtual
-                Dollar Cards. It's everything you need, in One App.
+                With {appName}, your wallet does it all. Send money to any
+                Nigerian bank in seconds, receive payments straight into your
+                wallet, and pay every bill that matters — airtime, data, cable
+                TV, and electricity. It&apos;s everything you need, in one app.
               </p>
               <Link
                 href="/auth/login"

@@ -32,7 +32,7 @@ const Power_FAQ = () => {
   return (
     <FAQ
       title="Buy Electricity FAQ"
-      description="Everything you need to know about the purchasing electricity unity"
+      description="Everything you need to know about purchasing electricity units"
       questions={frequentQuestions}
     />
   );

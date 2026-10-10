@@ -14,21 +14,21 @@ import appName from "@/src/constants/data/App_Name";
 const frequentQuestions = [
   {
     title: `How does ${appName}'s money transfer feature work?`,
-    content: `${appName} allows you to send money to your friends and family seamlessly and without limits or restrictions, regardless of their location or financial needs.`,
+    content: `Fund your ${appName} wallet, enter the recipient's Nigerian bank account details, confirm the account name, and hit send. The money lands in their account in seconds.`,
   },
   {
-    title: `Are there any restrictions on the amount of money I can send using ${appName}?`,
+    title: `Can I receive money with ${appName}?`,
     content:
-      `No, ${appName} allows you to send money without any limits or restrictions, subject to the applicable laws of the Federal Republic of Nigeria. `,
+      `Yes. Every ${appName} wallet comes with a dedicated account number you can share to receive money from any Nigerian bank — transfers land in your wallet instantly.`,
   },
   {
     title: "How much are the fees for making transfers?",
-    content: `${appName} charges a minimal fee of 25 naira per transfer depending on your membership level. You can as well enjoy ${appName} zero fees on transfers if you are a Gold member.`,
+    content: `${appName} keeps transfer fees low and transparent — you'll always see the exact fee before you confirm a transfer. No hidden charges, ever.`,
   },
   {
     title: "How fast do recipients receive transfers?",
     content:
-      `The speed of money transfers through ${appName} can vary depending on factors such as the recipient's bank and the chosen transfer method. However, ${appName} strives to facilitate transfers as quickly as possible.`,
+      `Most ${appName} transfers are delivered instantly. In rare cases, settlement may take a few minutes depending on the recipient's bank.`,
   },
   {
     title: `Is there a limit to the number of money transfers I can make with ${appName}?`,
@@ -55,7 +55,7 @@ const Transfer_View = () => {
       <Multiple_Payment />
       <Full_Flex
         img={AfricanWoman}
-        details={`Through my experience with ${appName} Money Transfer, I've seen the remarkable speed and convenience it offers. Whether sending money from ${appName} to ${appName} instantly or streamlining transactions with ${appName} Bulk Transfer, each step is seamless.`}
+        details={`Through my experience with ${appName} Money Transfer, I've seen the remarkable speed and convenience it offers. Whether sending money from ${appName} to ${appName} instantly or paying straight into any Nigerian bank account, each step is seamless.`}
         subText={{
           span: "- Teniola ",
           text: ", Send money experience.",

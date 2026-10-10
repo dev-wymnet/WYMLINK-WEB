@@ -32,7 +32,7 @@ const Footer = ({ wrapperWidth }: footerProps) => {
                 /> */}
 
                 <p className="font-[300] w-[60%] mt-[-4px] text-lemonColor leading-[1.2] text-[12px] text-nowrap">
-                  Better than your bank
+                  Money, made simple
                 </p>
               </div>
               {FooterTopData?.map((item, key) => (
@@ -80,10 +80,10 @@ const Footer = ({ wrapperWidth }: footerProps) => {
                   Contact
                 </h3>
                 <a
-                  href="mailto:Support@wymnet.org"
+                  href="mailto:support@wymlink.org"
                   className="text-[14px] no-underline text-lemonColor underline font-[400] block my-[10px] leading-loose"
                 >
-                  support@wymnet.org
+                  support@wymlink.org
                 </a>
               </div>
               <div className="payBillContaim my-6 w-[48%] text-primary lg:w-[27%] ">
@@ -177,9 +177,7 @@ const Footer = ({ wrapperWidth }: footerProps) => {
                     {appName} is a product of {appName} Ltd ({appName}
                     ), a Financial Technology company and not a bank. Banking
                     services are provided by our partner banks who are duly
-                    licensed by the CBN. {appName} is approved by the Federal
-                    Competition and Consumer Protection Commission to operate
-                    it's digital loan service.
+                    licensed by the CBN.
                   </p>
                 </div>
                 <div className="max-w-[120px]">

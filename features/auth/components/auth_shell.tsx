@@ -1,6 +1,7 @@
 import { Auth_Card } from "@/components/card_components/auth_card";
 import { DoubleText } from "@/components/ui_components/double_text";
 import { Auth_Hero_Widget } from "@/components/widget_components/auth_hero_widget";
+import { appName } from "@/data/constants/app_name";
 import { AuthShellProps } from "../types";
 
 
@@ -15,7 +16,7 @@ export const Auth_Shell = ({ title, subtitle, children }: AuthShellProps) => {
             <div className="space-y-8">
               <div className="space-y-3">
                 <span className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
-                  Wynmet
+                  {appName}
                 </span>
                 <DoubleText subtitle={subtitle} title={title} />
               </div>

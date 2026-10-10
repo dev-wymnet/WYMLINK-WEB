@@ -5,7 +5,7 @@ export const AntiMoneyLaundryDatas = [
     hasTitle: true,
     title: "Overview",
     paragraphs: [
-      `${appName} is an online payment platform registered in Nigeria, with a license to collect deposits, facilitate payments, engage in foreign exchange dealings, and otherwise provide online payment services to customers resident in Nigeria.`,
+      `${appName} is an online payment platform registered in Nigeria, licensed to collect deposits, facilitate payments, and otherwise provide online payment services to customers resident in Nigeria.`,
       `${appName} is committed to fighting money laundering and complying fully with anti-money laundering (hereafter AML) and counter-terrorism financing (hereafter CTF) laws and regulations in force in the Federal Republic of Nigeria (hereafter Nigeria). We understand that we have responsibilities to help fight the global battle against money laundering and our commitment will supersede all other privacy obligations contained in our policies. Accordingly, ${appName} will take all reasonable and appropriate steps to prevent persons engaged in money laundering, fraud, or other financial crimes from utilizing our products and services.`,
       `Our AML policies, procedures and internal controls are designed to ensure compliance with all applicable regulations of the Central Bank of Nigeria as well as the Economic and Financial Crimes Commission, along with all applicable laws of the Federal Republic of Nigeria, and will be reviewed and updated on a regular basis to ensure that these policies, procedures and internal controls are updated to adequately reflect changes, both in the regulatory framework and in our business.`,
     ],

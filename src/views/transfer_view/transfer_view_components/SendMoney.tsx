@@ -38,7 +38,7 @@ const SendMoney = () => {
           Send Money to Banks in Nigeria
         </h2>
         <p className="lg:w-[60%]  max-md:w-full font-[300] lg:mt-4 mt-2 xmd:text-xl text-[#667085]">
-          Send money locally with ease using {appName}. Manage your bills, make instant transfers, and stay in control of your finances, all in one place.
+          Move naira the easy way with {appName}. Send money to any Nigerian bank account, receive payments into your wallet, and stay in control of your finances — all in one place.
         </p>
       </div>
       <section className="flex sm:flex-row flex-col justify-center xl:gap-[29px] gap-8  mt-12 xmd:h-[570px]">

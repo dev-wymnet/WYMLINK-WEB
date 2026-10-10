@@ -11,8 +11,8 @@ const Footer = () => {
             <Link href={"/"}>
             </Link>
             <p className="md:w-[90%]">
-              {appName} provides innovative solutions that simplify financial
-              management and drive business success — anytime, anywhere.
+              {appName} helps you send money to any Nigerian bank, receive
+              payments, and pay bills instantly — anytime, anywhere.
             </p>
           </div>
           <div className="flex-1 flex flex-col gap-8 md:flex-row justify-between">
@@ -44,11 +44,11 @@ const Footer = () => {
           </div>
           <p className="font-inter text-[#E1E1E1] mt-8">
             At {appName}, we are committed to your financial freedom. Our
-            platform is designed to provide you with seamless, secure, and
-            efficient cross-border transactions. We are constantly innovating to
-            enhance your experience and ensure your money moves as smoothly as
-            you do. Thank you for choosing {appName} - Unlocking Seamless Cross
-            Border Transactions.
+            platform is designed to give you seamless, secure, and instant
+            payments — from wallet-to-bank transfers to airtime, data, cable
+            TV, and electricity bills. We are constantly innovating to ensure
+            your money moves as smoothly as you do. Thank you for choosing{" "}
+            {appName} — money, made simple.
           </p>
         </section>
       </div>

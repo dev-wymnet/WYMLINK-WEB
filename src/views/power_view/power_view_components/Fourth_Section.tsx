@@ -9,8 +9,8 @@ const Fourth_Section = () => {
     <>
       <Full_Flex 
         img={Amina} 
-        title={`Amina’s Bold Move: Keeping the Lights on`}
-        details={`Amina is a busy professional with tons of bills to pay and very little time to spare. When she runs out of electricity units, Amina relies on ${appName} for quick, seamless electricity top-ups. For Amina, the convenience offered by ${appName} is why she won’t use any other app. Be like Amaka. Experience ${appName}!`} 
+        title={`Amina’s Smart Move: Keeping the Lights on`}
+        details={`Amina is a busy professional with tons of bills to pay and very little time to spare. When she runs out of electricity units, Amina relies on ${appName} for quick, seamless electricity top-ups. For Amina, the convenience offered by ${appName} is why she won’t use any other app. Be like Amina. Experience ${appName}!`} 
         btnText={`Join Amina`}
         styles={
             {

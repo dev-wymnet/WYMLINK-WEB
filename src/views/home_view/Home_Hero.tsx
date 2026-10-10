@@ -10,13 +10,13 @@ const Home_Hero = () => {
   return (
     <>
       <SEO
-        title={`${appName} | Fintech, Telecom & Online Learning Platform`}
-        description="Wymnet is an all-in-one digital platform for secure payments, digital banking, airtime, data bundles, eSIMs, bill payments, money transfers, and online learning courses."
+        title={`${appName} | Send Money, Receive Money & Pay Bills in Nigeria`}
+        description={`${appName} is the all-in-one payments app for Nigeria. Send money instantly from your ${appName} wallet to any Nigerian bank account, receive money, and pay bills — airtime, data, cable TV and electricity — all in one place.`}
       />
 
       <Hero
-        title="One Platform for Payments, Telecom & Learning"
-        subText="Manage your money, buy airtime, data bundles and eSIMs, pay bills, send and receive payments, and learn new skills through expert-led courses—all from one secure platform."
+        title="Send Money, Pay Bills & Top Up — All in One App"
+        subText={`Fund your ${appName} wallet, send money instantly to any Nigerian bank account, receive payments, and settle airtime, data, cable TV and electricity bills in seconds. This is money, made simple.`}
         img={HomeHeroImg}
         btnText={`Get Started with ${appName}`}
         styles={{

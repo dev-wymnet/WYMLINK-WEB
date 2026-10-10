@@ -90,22 +90,3 @@ const Simple_Flex_Items2 = ({
 };
 
 export default Simple_Flex_Items2;
-
-//             imgPosition: "right",
-//             imgStyle: "lg:w-[35%] scale-[0.7] relative max-xmd:hidden",
-//           }}
-//           bgColor={""}
-//           make="xmd:text-[46px]"
-//           title={" & pay bills"}
-//           details={
-//             "You can do so much more than just banking when you use Bold. Need a quick loan to take care of urgent needs? Looking to make and track single or bulk payments? Or simply looking for the best savings platform to protect against inflation? A world of financial freedom is just a click away."
-//           }
-//           btn={{
-//             btnStyles: "text-white",
-//             btnText: "Download Bold",
-//             btnBgColor: "bg-black",
-//           }}
-//           btnAction={handleClick}
-//           absoluteImg={Web}
-//           spanText="Keep more money"
-//         />

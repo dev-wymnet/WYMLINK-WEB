@@ -21,7 +21,7 @@ const navArray = [
     details: PAYMENT,
   },
   // { title: "Reward", isDropdown: true, details: REWARD },
-  { title: "Education", isDropdown: false, href: "#" },
+  { title: "Blog", isDropdown: false, href: "/blog" },
   { title: "About Us", isDropdown: false, href: "/about" },
   { title: "Help", isDropdown: true, details: HELP },
 ];

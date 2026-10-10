@@ -26,7 +26,7 @@ const Hero_Layout = ({
             cash ? cash : "bottom-0 right-0"
           }`}
         >
-          <Image src={bgImage} alt="global" className="w-full" />
+          <Image src={bgImage} alt="" className="w-full" />
         </div>
       )}
     </section>

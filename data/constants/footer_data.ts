@@ -1,15 +1,15 @@
 export const Nav_Data = [
   {
-    name: "Telecoms",
-    href: "/telecoms",
+    name: "Services",
+    href: "/services/bank-transfer",
   },
   {
-    name: "Fintech",
-    href: "/fintech",
+    name: "About Us",
+    href: "/about",
   },
   {
     name: "Help",
-    href: "/help",
+    href: "/faq",
   },
 ];
 export const Footer_Data = [
@@ -21,16 +21,16 @@ export const Footer_Data = [
         href: "/",
       },
       {
-        name: "Features",
-        href: "/credit-card",
+        name: "Send Money",
+        href: "/services/bank-transfer",
       },
       {
-        name: "Why Choose Us",
+        name: "About Us",
         href: "/about",
       },
       {
-        name: "Contact",
-        href: "/help",
+        name: "FAQs",
+        href: "/faq",
       },
     ],
   },
@@ -55,13 +55,13 @@ export const Footer_Data = [
     title: "Get in Touch",
     subLinks: [
       {
-        name: `info@wynmet.com `,
-        href: `malto:info@wynmet.com`,
+        name: `support@wymlink.org`,
+        href: `mailto:support@wymlink.org`,
         icon: "",
       },
       {
-        name: "(683) 710-2003",
-        href: `tel:+6837102003`,
+        name: "+234 707 594 9707",
+        href: `tel:+2347075949707`,
         icon: "",
       },
     ],

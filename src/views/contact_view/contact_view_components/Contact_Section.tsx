@@ -28,11 +28,11 @@ const Contact_Section = () => {
               <div className="flex gap-2 max-md:gap-1 items-center max-md:flex-col">
                 <span>Support: </span>
                 <a
-                  href="mailto:info@wymnet.org"
+                  href="mailto:support@wymlink.org"
                   className="xmd:bg-[#F9F5FF] underline rounded-[16px] px-3 py-2 text-[16px] max-sm:text-[12px] text-[#006FFF] my-6"
                 >
                   <span className="font-[600] no-underline">
-                    info@wymnet.org
+                    support@wymlink.org
                   </span>
                 </a>
               </div>

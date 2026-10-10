@@ -1,13 +1,14 @@
 // src/components/SeoHelmet.js
 import React from "react";
 import { Helmet } from "react-helmet";
+import appName from "../constants/data/App_Name";
 
 const Seo = ({
-  title = "Wymnet | Digital Payment Without Limits",
-  description = "Send, spend, and receive money seamlessly with Wymnet. No banks, no borders, no limits.",
-  keywords = "Wymnet, digital payments, fintech, send money, receive money, USD virtual card, virtual dollar card, USDT payments, cross-border transfers, borderless banking, pay with face, face recognition payment, scan to pay, Nigeria to USA transfers, digital wallets, AI banking, facepay, pay with photo, fintech Nigeria, virtual bank account, OCR bank detail extraction, dollar card Nigeria, global payment app, financial inclusion, stablecoin transfers, instant payout, no bank needed",
-  url = "https://www.Wymnet.org",
-  image = "https://www.Wymnet.org/Wymnet-icon.png",
+  title = `${appName} | Send Money & Pay Bills in Nigeria`,
+  description = `${appName} is the smarter way to move money in Nigeria. Send money instantly from your ${appName} wallet to any Nigerian bank account, receive money, and pay bills — airtime, data, cable TV and electricity — all in one app.`,
+  keywords = `${appName}, send money Nigeria, money transfer Nigeria, NGN wallet, bank transfer app Nigeria, receive money Nigeria, pay bills online Nigeria, buy airtime online, buy data bundles, cable TV subscription payment, electricity bill payment, instant bank transfer, fintech Nigeria, digital wallet Nigeria, bill payment app`,
+  url = "https://www.wymlink.com",
+  image = "https://www.wymlink.com/wymlink-icon.png",
 }) => (
   <Helmet>
     <title>{title}</title>

@@ -15,9 +15,7 @@ const ROUTES = {
   TERMS: "/terms",
   AML: "/AML",
   FAQ: "/faq",
-  GETBOLD: "/auth/login",
-  MAKE_PAYMENT: "/scan-and-pay",
-  GLOBALTRANSFER: "/global-transfer",
+  GET_STARTED: "/auth/login",
 };
 
 export default ROUTES;

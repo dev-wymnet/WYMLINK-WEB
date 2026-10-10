@@ -11,8 +11,8 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 const defaultHeaders = { "Content-Type": "application/json" };
 
 export const AUTH_STORAGE_KEYS = {
-  accessToken: "wynmet.accessToken",
-  refreshToken: "wynmet.refreshToken",
+  accessToken: "wymlink.accessToken",
+  refreshToken: "wymlink.refreshToken",
 } as const;
 
 let sessionController: AuthSessionController | null = null;
