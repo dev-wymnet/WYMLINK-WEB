@@ -9,7 +9,7 @@ import {
   IcSmartphone,
 } from "@/components/app/icons";
 import { Accent, Container, CtaBand, CtaLink, FaqSection, FeatureGrid, Intro, Lead, Panel, SectionHeading, SitePage, StayUpdatedSection, rv } from "@/components/site/blocks";
-import { LiveCredit, RevealGroup } from "@/components/site/reveal";
+import { RevealGroup } from "@/components/site/reveal";
 import { Carousel } from "@/components/site/carousel";
 import { BrowserWindow, DevicePhone } from "@/components/site/device";
 import { IsoStacks } from "@/components/site/iso_stacks";
@@ -150,7 +150,6 @@ export default function HomePage() {
           <DevicePhone src="/assets/app/airtime.webp" alt="Buying airtime: pick the network and amount" className="rv-phone-side absolute left-1/2 top-10 z-10 hidden translate-x-[calc(-50%+256px)] lg:block" style={rv(1600)} />
           <div className="rv-phone absolute left-1/2 top-0 z-20 w-[270px] -translate-x-1/2 sm:w-[323px]" style={rv(1500)}>
             <DevicePhone src="/assets/app/home.webp" alt="The Wymlink home screen" priority sizes="(min-width: 640px) 323px, 270px" className="w-full" />
-            <LiveCredit className="absolute left-1/2 top-[17%] z-10 -translate-x-1/2" />
           </div>
         </RevealGroup>
       </Panel>

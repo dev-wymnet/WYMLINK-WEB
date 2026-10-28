@@ -267,20 +267,3 @@ html.js [data-reveal]:not([data-shown]) .rv-phone-side {
   }
 }
 
-/* "Money in" pill: the live dot breathes (1.6 s). */
-.live-dot {
-  animation:
-    live-dot-opacity 1.6s ease-in-out infinite,
-    live-dot-scale 1.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
-}
-@keyframes live-dot-opacity {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.25; }
-}
-@keyframes live-dot-scale {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(0.85); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .live-dot { animation: none; }
-}
