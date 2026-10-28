@@ -141,6 +141,19 @@ export type TicketDetail = TicketRow & {
   messages: TicketMessage[];
 };
 
+export type CollectionAccount = { id: string; bankCode: string; bankName: string; accountNumber: string; accountName: string; createdAt: string };
+export type OwedCustomer = {
+  userId: string; name: string; email: string | null; phone: string | null; accountNumber: string; virtualAccountId: string;
+  spent: string; collected: string; inFlight: string; owed: string; lastCollectedAt: string | null; vaBalance: string | null; collectable: string | null;
+};
+export type OwedSummary = { fee: string; totals: { spent: string; collected: string; inFlight: string; owed: string }; customers: OwedCustomer[] };
+export type CollectionRow = {
+  id: string; userId: string; customer: string | null; accountNumber: string | null; owedBefore: string; vaBalanceBefore: string | null;
+  gross: string; fee: string; sent: string; status: "processing" | "success" | "failed" | "unknown"; providerReference: string | null;
+  lastError: string | null; createdAt: string; completedAt: string | null;
+};
+export type CollectResult = { skipped: boolean; reason?: string; collection?: CollectionRow };
+
 export const adminApi = {
   login: (email: string, password: string) => call<AdminLoginStep>("/api/admin/session/login", { method: "POST", body: { email, password } }),
   verifyCode: (code: string) => call<{ admin: Admin }>("/api/admin/session/mfa", { method: "POST", body: { code } }),
@@ -175,4 +188,15 @@ export const adminApi = {
   setStaffStatus: (id: string, status: "active" | "disabled") => bff<unknown>(`/admins/${encodeURIComponent(id)}/status`, { method: "PATCH", body: { status } }),
   setStaffRole: (id: string, role: StaffRole) => bff<unknown>(`/admins/${encodeURIComponent(id)}/role`, { method: "PATCH", body: { role } }),
   resetStaffMfa: (id: string) => bff<unknown>(`/admins/${encodeURIComponent(id)}/mfa/reset`, { method: "POST", body: {} }),
+
+  // Collections: moving what customers spent out of their Moneta accounts to WymNet's bank.
+  collectionBanks: () => bff<{ banks: { code: string; name: string }[] }>("/collections/banks"),
+  collectionAccount: () => bff<{ account: CollectionAccount | null }>("/collections/account"),
+  setCollectionAccount: (bankCode: string, accountNumber: string) =>
+    bff<{ account: CollectionAccount }>("/collections/account", { method: "POST", body: { bankCode, accountNumber } }),
+  owed: (balances = false) => bff<OwedSummary>("/collections/owed", { query: { balances: balances ? "true" : "false" } }),
+  collect: (userId: string) => bff<CollectResult>("/collections/run", { method: "POST", body: { userId } }),
+  collectAll: () => bff<{ attempted: number; results: (CollectResult & { userId: string; name: string })[] }>("/collections/run", { method: "POST", body: { all: true } }),
+  collections: () => bff<{ collections: CollectionRow[] }>("/collections", { query: { limit: 100 } }),
+  refreshCollection: (id: string) => bff<{ collection: CollectionRow }>(`/collections/${encodeURIComponent(id)}/refresh`, { method: "POST", body: {} }),
 };

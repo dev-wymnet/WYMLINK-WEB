@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { IcDocument, IcIdCard, IcKeyRound, IcLayoutDashboard, IcLifeBuoy, IcLogOut, IcShieldCheck, IcUsers } from "@/components/app/icons";
+import { IcDocument, IcIdCard, IcKeyRound, IcLayoutDashboard, IcLifeBuoy, IcLogOut, IcShieldCheck, IcUsers, IcLandmark } from "@/components/app/icons";
 import { Brand } from "@/components/app/brand";
 import { cx } from "@/lib/cx";
 import { AdminProvider, ROLE_LABEL, useAdmin } from "@/features/admin/admin_context";
@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/kyc", label: "KYC reviews", icon: IcIdCard },
   { href: "/admin/customers", label: "Customers", icon: IcUsers },
   { href: "/admin/support", label: "Support", icon: IcLifeBuoy },
+  { href: "/admin/collections", label: "Collections", icon: IcLandmark, perm: "ADMIN_VIEW_PAYOUTS" },
   { href: "/admin/blog", label: "Blog", icon: IcDocument, roles: ["super_admin", "business_admin"] },
   { href: "/admin/staff", label: "Staff", icon: IcShieldCheck, perm: "ADMIN_MANAGE_ADMINS" },
   { href: "/admin/account", label: "Your account", icon: IcKeyRound },
