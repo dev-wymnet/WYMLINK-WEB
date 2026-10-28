@@ -1,5 +1,6 @@
 import "server-only";
 import { createClient, type SanityClient } from "@sanity/client";
+import { SANITY_API_VERSION, SANITY_DATASET, SANITY_PROJECT_ID } from "@/lib/sanity/project";
 
 // Writes to the blog's Sanity dataset for the admin console. The token (an Editor token
 // from sanity.io/manage → API → Tokens) stays on the server: browsers never see it.
@@ -11,9 +12,9 @@ export const blogWritingConfigured = () => Boolean(process.env.SANITY_API_WRITE_
 export function sanityWriter(): SanityClient {
   if (!process.env.SANITY_API_WRITE_TOKEN) throw new Error("SANITY_API_WRITE_TOKEN is not set");
   client ??= createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_iD,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-    apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-05-01",
+    projectId: SANITY_PROJECT_ID,
+    dataset: SANITY_DATASET,
+    apiVersion: SANITY_API_VERSION,
     token: process.env.SANITY_API_WRITE_TOKEN,
     useCdn: false,
     perspective: "raw",

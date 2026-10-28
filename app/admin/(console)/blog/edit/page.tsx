@@ -24,10 +24,9 @@ import { errorMessage } from "@/lib/api/client";
 import { blogApi, type BlogPost, type BlogStatus } from "@/lib/api/admin";
 import { blocksToHtml, htmlToBlocks, imageUrl, type BodyBlock } from "@/lib/blog/portable";
 import { useAdmin } from "@/features/admin/admin_context";
+import { SANITY_DATASET, SANITY_PROJECT_ID } from "@/lib/sanity/project";
 
-const PROJECT = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "";
-const DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
-const img = (ref: string, w = 1200) => imageUrl(ref, PROJECT, DATASET, w);
+const img = (ref: string, w = 1200) => imageUrl(ref, SANITY_PROJECT_ID, SANITY_DATASET, w);
 
 const STATUS: Record<BlogStatus, { label: string; tone: "ok" | "neutral" | "warn" }> = {
   published: { label: "On the site", tone: "ok" },
