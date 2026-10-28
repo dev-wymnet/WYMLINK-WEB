@@ -37,7 +37,7 @@ export function Statement({ title, children, className }: { title: ReactNode; ch
   return (
     <div className={cx("grid gap-6 md:grid-cols-[0.9fr_1.1fr] md:gap-12", className)}>
       <Heading>{title}</Heading>
-      <div className="text-[17px] leading-[1.55] tracking-[-0.17px] text-ink/70 sm:text-lg">{children}</div>
+      <div className="text-[17px] leading-[1.55] tracking-[calc(0.05em_-_0.17px)] text-ink/70 sm:text-lg">{children}</div>
     </div>
   );
 }
@@ -52,8 +52,8 @@ export function StoryCards({ items }: { items: Array<Photo & { title: string; bo
             <span className="relative aspect-[16/11] overflow-hidden rounded-[20px] shadow-[0_0_0_1px_rgb(11_18_32/0.05)]">
               <Image src={s.src} alt={s.alt} fill sizes="(min-width: 1024px) 320px, (min-width: 640px) 45vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-[1.03]" />
             </span>
-            <span className="mt-5 text-xl font-[450] leading-[1.35] tracking-[-0.2px] text-ink">{s.title}</span>
-            <span className="mt-2 text-base leading-[1.45] tracking-[-0.16px] text-ink/60">{s.body}</span>
+            <span className="mt-5 text-xl font-[450] leading-[1.35] tracking-[calc(0.05em_-_0.2px)] text-ink">{s.title}</span>
+            <span className="mt-2 text-base leading-[1.45] tracking-[calc(0.05em_-_0.16px)] text-ink/60">{s.body}</span>
             <span className="mt-4 inline-flex items-center gap-2 text-[15px] font-[450] text-brand-500">
               Learn more
               <span className="grid size-5 place-items-center rounded-full bg-brand-500/10 text-xs transition-transform group-hover:translate-x-0.5">
@@ -73,7 +73,7 @@ export function WidePhoto({ title, photo, priority }: { title?: ReactNode; photo
     <section className="px-5 py-16 sm:px-12 sm:py-24">
       <Container className="flex flex-col gap-10">
         {title && (
-          <h2 className="max-w-[560px] text-balance text-[32px] font-medium leading-[1.2] tracking-[-0.8px] text-ink sm:text-[40px] sm:tracking-[-1.2px]">{title}</h2>
+          <h2 className="max-w-[560px] text-balance text-[32px] font-medium leading-[1.2] tracking-[calc(0.05em_-_0.8px)] text-ink sm:text-[40px] sm:tracking-[calc(0.05em_-_1.2px)]">{title}</h2>
         )}
         <div className="relative aspect-[16/8] overflow-hidden rounded-[24px] shadow-[0_0_0_1px_rgb(11_18_32/0.05)] sm:rounded-[32px]">
           <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1080px) 986px, 100vw" className="object-cover" priority={priority} />

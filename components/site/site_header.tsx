@@ -24,8 +24,8 @@ function MenuCard({ item, onPick }: { item: MenuItem; onPick?: () => void }) {
     <Link href={item.href} onClick={onPick} className="flex items-center gap-4 rounded-[24px] border border-ink/5 bg-white px-4 py-[15px] transition-colors hover:bg-[#fafafb]">
       <span className="grid size-10 shrink-0 place-items-center">{Icon ? <Icon className="text-[30px] text-ink/40" /> : <AppIcon size={40} className="rounded-[11px]" />}</span>
       <span className="min-w-0">
-        <span className="block text-[15px] font-[450] leading-tight tracking-[-0.15px] text-ink">{item.title}</span>
-        <span className="mt-1 block truncate text-[15px] leading-tight tracking-[-0.15px] text-ink/55">{item.body}</span>
+        <span className="block text-[15px] font-[450] leading-tight tracking-[calc(0.05em_-_0.15px)] text-ink">{item.title}</span>
+        <span className="mt-1 block truncate text-[15px] leading-tight tracking-[calc(0.05em_-_0.15px)] text-ink/55">{item.body}</span>
       </span>
     </Link>
   );
@@ -112,7 +112,7 @@ export function SiteHeader({ tone = "light" }: { tone?: "light" | "dark" | "bran
         </nav>
         <Link
           href={signedIn ? "/dashboard" : "/auth/signup"}
-          className={cx("ml-4 hidden h-8 items-center rounded-full px-4 text-sm font-[450] tracking-[-0.14px] transition-colors lg:inline-flex", dark ? "bg-white text-ink hover:bg-[#ebebeb]" : "bg-ink text-white hover:bg-[#262b38]")}
+          className={cx("ml-4 hidden h-8 items-center rounded-full px-4 text-sm font-[450] tracking-[calc(0.05em_-_0.14px)] transition-colors lg:inline-flex", dark ? "bg-white text-ink hover:bg-[#ebebeb]" : "bg-ink text-white hover:bg-[#262b38]")}
         >
           {signedIn ? "Dashboard" : "Get started"}
         </Link>

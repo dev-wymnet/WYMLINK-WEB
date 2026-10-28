@@ -14,8 +14,8 @@ export function AuthLayout({ title, subtitle, children, footer, photo = DEFAULT_
       <main className="flex flex-col px-4 pb-4 pt-4 sm:px-8">
         <Brand />
         <div className="mx-auto flex w-full max-w-[420px] flex-1 flex-col justify-center py-12">
-          <h1 className="text-balance text-[40px] font-[550] leading-[1.1] tracking-[-1.6px] text-ink/90 sm:text-[48px] sm:tracking-[-2px]">{title}</h1>
-          {subtitle && <p className="mt-3 text-[17px] leading-[1.36] tracking-[-0.2px] text-ink/65 sm:text-xl">{subtitle}</p>}
+          <h1 className="text-balance text-[40px] font-[550] leading-[1.1] tracking-[calc(0.05em_-_1.6px)] text-ink/90 sm:text-[48px] sm:tracking-[calc(0.05em_-_2px)]">{title}</h1>
+          {subtitle && <p className="mt-3 text-[17px] leading-[1.36] tracking-[calc(0.05em_-_0.2px)] text-ink/65 sm:text-xl">{subtitle}</p>}
           <div className="mt-10">{children}</div>
           {footer && <div className="mt-10 text-center text-[15px] text-ink/65">{footer}</div>}
         </div>
@@ -28,10 +28,10 @@ export function AuthLayout({ title, subtitle, children, footer, photo = DEFAULT_
           <p className="inline-flex items-center gap-2.5 text-[15px] font-[450] text-ink/70">
             <AppIcon size={26} className="rounded-[8px]" /> Wymlink App
           </p>
-          <h2 className="mt-3 text-balance text-[40px] font-[550] leading-[1.08] tracking-[-1.6px] text-ink/90">
+          <h2 className="mt-3 text-balance text-[40px] font-[550] leading-[1.08] tracking-[calc(0.05em_-_1.6px)] text-ink/90">
             Linked to <Accent>everything</Accent>
           </h2>
-          <p className="mt-2 max-w-md text-[17px] leading-[1.4] tracking-[-0.17px] text-ink/65">Airtime, data, TV, electricity and transfers to any bank, approved with your own PIN.</p>
+          <p className="mt-2 max-w-md text-[17px] leading-[1.4] tracking-[calc(0.05em_-_0.17px)] text-ink/65">Airtime, data, TV, electricity and transfers to any bank, approved with your own PIN.</p>
         </div>
       </aside>
     </div>

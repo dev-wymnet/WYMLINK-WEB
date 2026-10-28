@@ -195,8 +195,8 @@ export default function HomePage() {
             {BILLS.map((c) => (
               <li key={c.title} className="flex min-h-[340px] flex-col justify-between gap-8 rounded-[24px] bg-white/[0.03] px-6 py-8">
                 <div className="flex flex-col gap-3">
-                  <h3 className="text-xl font-[450] leading-[1.35] tracking-[-0.2px] text-white">{c.title}</h3>
-                  <p className="text-base leading-[1.45] tracking-[-0.16px] text-white/70">{c.body}</p>
+                  <h3 className="text-xl font-[450] leading-[1.35] tracking-[calc(0.05em_-_0.2px)] text-white">{c.title}</h3>
+                  <p className="text-base leading-[1.45] tracking-[calc(0.05em_-_0.16px)] text-white/70">{c.body}</p>
                 </div>
                 <ul className="flex flex-wrap content-start gap-2 border-t border-white/10 pt-8">
                   {c.chips.map((chip, i) => (
@@ -267,11 +267,11 @@ export default function HomePage() {
                   <span className="pointer-events-none absolute inset-0 bg-white/20" aria-hidden />
                   <div className="relative flex items-center gap-3">
                     <Image src={p.logo} alt="" width={48} height={48} className="size-12 rounded-[12px] bg-white object-contain" />
-                    <span className="text-base tracking-[-0.16px] text-ink/60">{p.name}</span>
+                    <span className="text-base tracking-[calc(0.05em_-_0.16px)] text-ink/60">{p.name}</span>
                   </div>
                   <div className="relative">
-                    <p className="text-[28px] font-medium leading-[1.35] tracking-[-0.64px] text-ink sm:text-[32px]">{p.stat}</p>
-                    <p className="text-base leading-[1.45] tracking-[-0.16px] text-ink/45">{p.caption}</p>
+                    <p className="text-[28px] font-medium leading-[1.35] tracking-[calc(0.05em_-_0.64px)] text-ink sm:text-[32px]">{p.stat}</p>
+                    <p className="text-base leading-[1.45] tracking-[calc(0.05em_-_0.16px)] text-ink/45">{p.caption}</p>
                   </div>
                 </article>
               ))}
@@ -328,14 +328,14 @@ export default function HomePage() {
           <FeatureGrid items={SAFETY} />
           <div className="mx-auto mt-16 h-px max-w-[890px] bg-ink/[0.07] sm:mt-[72px]" />
           <div className="mt-16 flex flex-col items-center gap-4 text-center sm:mt-[72px]">
-            <h2 className="text-[28px] font-medium leading-[1.2] tracking-[-0.56px] text-ink/90 sm:text-[40px] sm:tracking-[-1.2px]">Know where every naira goes.</h2>
+            <h2 className="text-[28px] font-medium leading-[1.2] tracking-[calc(0.05em_-_0.56px)] text-ink/90 sm:text-[40px] sm:tracking-[calc(0.05em_-_1.2px)]">Know where every naira goes.</h2>
             <Lead>Money in and money out, each with a receipt and a reference.</Lead>
           </div>
           <div className="mt-12 rounded-[24px] bg-white p-6 shadow-[0_0_0_1px_rgb(11_18_32/0.05),0_1px_2px_rgb(0_0_0/0.03)] sm:mt-[72px] sm:p-8">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="text-xl font-[450] tracking-[-0.2px] text-ink">Your activity</p>
-                <p className="mt-1 text-base tracking-[-0.16px] text-ink/65">Every transaction, with a receipt you can share.</p>
+                <p className="text-xl font-[450] tracking-[calc(0.05em_-_0.2px)] text-ink">Your activity</p>
+                <p className="mt-1 text-base tracking-[calc(0.05em_-_0.16px)] text-ink/65">Every transaction, with a receipt you can share.</p>
               </div>
               <p className="flex items-center gap-5 text-[15px] text-ink/65">
                 <span className="inline-flex items-center gap-2">
@@ -351,11 +351,11 @@ export default function HomePage() {
                 <li key={a.title} className="flex items-center gap-4 py-4">
                   <Image src={a.logo} alt="" width={40} height={40} className="size-10 rounded-full bg-white object-contain ring-1 ring-ink/5" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-base font-[450] tracking-[-0.16px] text-ink">{a.title}</p>
+                    <p className="truncate text-base font-[450] tracking-[calc(0.05em_-_0.16px)] text-ink">{a.title}</p>
                     <p className="text-sm text-ink/45">{a.when}</p>
                   </div>
                   <div className="text-right">
-                    <p className={cx("text-base font-medium tabular-nums tracking-[-0.16px]", a.credit ? "text-ok" : "text-ink")}>{a.amount}</p>
+                    <p className={cx("text-base font-medium tabular-nums tracking-[calc(0.05em_-_0.16px)]", a.credit ? "text-ok" : "text-ink")}>{a.amount}</p>
                     <p className="text-sm text-ink/45">Successful</p>
                   </div>
                 </li>

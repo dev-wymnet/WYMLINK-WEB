@@ -2,12 +2,12 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0b1220;
-  --primary: #0f172a;
+  --foreground: #1d2422;
+  --primary: #0d2b25;
   --surface: #ffffff;
-  --border: #e2e8f0;
+  --border: #e3e9e6;
   --muted: rgb(203, 204, 206);
-  --primary-soft: #eff6ff;
+  --primary-soft: #eef8f5;
   --success: #16a34a;
   --error: #dc2626;
 }
@@ -26,27 +26,27 @@
   --breakpoint-3xl: 1930px;
   --breakpoint-m3xl: 2000px;
 
-  /* Wymlink brand + app design tokens (same blues as the mobile app) */
-  --color-brand-50: #eef3ff;
-  --color-brand-100: #dbe5ff;
-  --color-brand-200: #bccdff;
-  --color-brand-300: #9db4ff;
-  --color-brand-400: #6f8cff;
-  --color-brand-500: #3461f5;
-  --color-brand-600: #1f45e6;
-  --color-brand-700: #1835c2;
-  --color-brand-900: #0e1e6b;
-  --color-indigo-deep: #2015af;
+  /* Wymlink brand + app design tokens: the logo's teal (#127A66), same as the mobile app */
+  --color-brand-50: #ecf8f5;
+  --color-brand-100: #d3efe8;
+  --color-brand-200: #a5ded1;
+  --color-brand-300: #7ccbb9;
+  --color-brand-400: #3fb29a;
+  --color-brand-500: #1a9580;
+  --color-brand-600: #127a66;
+  --color-brand-700: #0d5e4f;
+  --color-brand-900: #08443a;
+  --color-indigo-deep: #0b4a3f;
   /* Flat panel tints (the site's sections sit on rounded panels, no gradients) */
-  --color-tint: #f2f5ff;
-  --color-tint-2: #e7edff;
+  --color-tint: #eff8f5;
+  --color-tint-2: #e2f2ed;
   --color-lime-accent: #d6f99e;
   --color-lime-ink: #2f4a06;
-  --color-ink: #0b1220;
-  --color-ink-soft: #475467;
-  --color-ink-faint: #98a2b3;
-  --color-line: #e7eaf0;
-  --color-canvas: #f6f7fb;
+  --color-ink: #1d2422;
+  --color-ink-soft: #4a5753;
+  --color-ink-faint: #97a39f;
+  --color-line: #e5eae8;
+  --color-canvas: #f6f8f7;
   --color-ok: #12b76a;
   --color-ok-soft: #ecfdf3;
   --color-warn: #f79009;
@@ -56,10 +56,10 @@
 
   --radius-card: 1.5rem;
   --radius-panel: 2rem;
-  --shadow-card: 0 0 0 1px rgba(11, 18, 32, 0.06), 0 1px 2px rgba(11, 18, 32, 0.04);
-  --shadow-pop: 0 0 0 1px rgba(11, 18, 32, 0.05), 0 24px 60px -24px rgba(14, 30, 107, 0.35);
-  --shadow-phone: 0 50px 90px -40px rgba(11, 18, 32, 0.55);
-  --shadow-chip: 0 0 0 1px rgba(11, 18, 32, 0.05), 0 12px 32px -12px rgba(11, 18, 32, 0.25);
+  --shadow-card: 0 0 0 1px rgba(16, 26, 23, 0.06), 0 1px 2px rgba(16, 26, 23, 0.04);
+  --shadow-pop: 0 0 0 1px rgba(16, 26, 23, 0.05), 0 24px 60px -24px rgba(8, 68, 58, 0.3);
+  --shadow-phone: 0 50px 90px -40px rgba(16, 26, 23, 0.55);
+  --shadow-chip: 0 0 0 1px rgba(16, 26, 23, 0.05), 0 12px 32px -12px rgba(16, 26, 23, 0.25);
 
   /* Bank logo strip */
   --animate-marquee: marquee 50s linear infinite;
@@ -88,20 +88,18 @@
   --color-surface: var(--surface);
   --color-border: var(--border);
   --color-muted: var(--muted);
-  --color-muted-foreground: #475467;
+  --color-muted-foreground: #4a5753;
   --color-primary: var(--primary);
   --color-primarySoft: var(--primary-soft);
   --color-success: var(--success);
   --color-error: var(--error);
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-primaryBtnBg: #2a68ed;
-  --color-secondary: #0f172a;
+  --color-primaryBtnBg: #127a66;
+  --color-secondary: #0d2b25;
 
-  /* Loaded by app/layout.tsx: Onest everywhere, Inter for any glyph Onest lacks (₦). */
-  --font-sans: var(--font-onest), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  /* The italic accent word in big headings. */
-  --font-serif: var(--font-instrument), "Times New Roman", serif;
+  /* Loaded by app/layout.tsx: Outfit everywhere, Inter for any glyph Outfit lacks (₦). */
+  --font-sans: var(--font-outfit), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-aeonik: "Aeonik-Pro", sans-serif;
 }
 
@@ -157,39 +155,42 @@
     @apply w-[90%] mx-auto max-w-[1200px];
   }
 
-  /* Panel backgrounds: white at the top, easing into soft brand blue at the bottom. Each
-     stop is sampled from the reference and moved from its lavender to the Wymlink blue at
-     the same lightness and saturation. */
+  /* Panel backgrounds: white at the top, easing into soft brand teal at the bottom. Each
+     stop is sampled from the reference and moved from its lavender to the Wymlink teal at
+     the same lightness and saturation. The fluid canvas (components/site/fluid.tsx) draws
+     over these; they're what shows without WebGL or with reduced motion. */
   .panel-hero {
     background:
-      radial-gradient(40% 30% at 0% 82%, rgb(226 233 255 / 0.7), transparent 75%),
-      radial-gradient(40% 30% at 82% 100%, rgb(220 228 250 / 0.6), transparent 75%),
-      linear-gradient(180deg, #fff 0%, #fff 18%, #fcfdff 30%, #f3f6ff 45%, #eef2ff 60%, #e9eeff 75%, #e5ebfe 88%, #e2e8fc 100%);
+      radial-gradient(40% 30% at 0% 82%, rgb(226 255 249 / 0.7), transparent 75%),
+      radial-gradient(40% 30% at 82% 100%, rgb(220 250 244 / 0.6), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #fff 18%, #fcfffe 30%, #f3fffd 45%, #eefffc 60%, #e9fffb 75%, #e5fef9 88%, #e2fcf7 100%);
   }
   .panel-dark {
     background:
-      radial-gradient(70% 35% at 50% 100%, rgb(36 46 96 / 0.55), transparent 75%),
-      linear-gradient(180deg, #0f1013 0%, #0f1013 38%, #121523 60%, #181d35 82%, #1d223e 100%);
+      radial-gradient(70% 35% at 50% 100%, rgb(36 96 84 / 0.55), transparent 75%),
+      linear-gradient(180deg, #0f1312 0%, #0f1312 38%, #122320 60%, #18352f 82%, #1d3e37 100%);
   }
   .panel-kit {
     background:
-      radial-gradient(45% 30% at 0% 100%, rgb(195 208 250 / 0.85), transparent 75%),
-      linear-gradient(180deg, #fff 0%, #fefeff 15%, #f8f9fe 30%, #ebeffb 45%, #e1e7fa 60%, #d9e0f8 75%, #d5ddf8 88%, #d2dbf7 100%);
+      radial-gradient(45% 30% at 0% 100%, rgb(195 250 239 / 0.85), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #feffff 15%, #f8fefd 30%, #ebfbf8 45%, #e1faf5 60%, #d9f8f2 75%, #d5f8f1 88%, #d2f7f0 100%);
   }
   .panel-trust {
     background:
-      radial-gradient(40% 25% at 0% 97%, rgb(199 210 247 / 0.8), transparent 75%),
-      linear-gradient(180deg, #fff 0%, #fefeff 15%, #fbfcfe 30%, #ebeffb 45%, #dce3fa 60%, #d2dbf8 75%, #ced8f7 88%, #ccd6f7 100%);
+      radial-gradient(40% 25% at 0% 97%, rgb(199 247 237 / 0.8), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #feffff 15%, #fbfefd 30%, #ebfbf8 45%, #dcfaf4 60%, #d2f8f0 75%, #cef7ef 88%, #ccf7ee 100%);
   }
   .panel-foot {
     background:
-      radial-gradient(45% 40% at 20% 100%, rgb(212 221 249 / 0.7), transparent 75%),
-      linear-gradient(180deg, #fff 0%, #fff 15%, #fbfcfe 30%, #f3f6ff 45%, #ecf0fe 60%, #e4eafc 75%, #dde4fa 90%, #dae2f9 100%);
+      radial-gradient(45% 40% at 20% 100%, rgb(212 249 242 / 0.7), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #fff 15%, #fbfefd 30%, #f3fffd 45%, #ecfefa 60%, #e4fcf7 75%, #ddfaf4 90%, #daf9f3 100%);
   }
 
-  /* Accent word in a dark heading: soft brand gradient fill. */
-  .text-glow {
-    background: linear-gradient(134deg, #c8d4ff 0%, #7f99ff 49%, #c8d4ff 91%);
+  /* Highlighted words in a dark heading: soft brand gradient fill (the reference's dark section).
+     The revealed words are their own boxes, so they carry the fill too. */
+  .text-glow,
+  .text-glow span {
+    background: linear-gradient(134deg, #dcf3ed 0%, #5cc9af 49.47%, #dcf3ed 91.25%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

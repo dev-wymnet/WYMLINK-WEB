@@ -1,23 +1,17 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Inter, Instrument_Serif, Onest } from "next/font/google";
+import { Geist_Mono, Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { appName } from "@/data/constants/app_name";
 import { App_Providers } from "@/app/providers";
 import Scroll_To_Top from "@/components/layout_components/scroll_to_top";
 import AOSInit from "@/components/layout_components/AOSInit";
 
-// Onest: the site's typeface. Instrument Serif (italic): the accent word in big headings.
-// Inter: fallback for glyphs Onest lacks (₦).
-const onest = Onest({
-  variable: "--font-onest",
+// Outfit: the site's typeface, the closest free match to the reference's (same letter
+// heights and single-storey "a"; its letters run ~0.05em narrower, so letter-spacing adds
+// that back). Inter: fallback for glyphs Outfit lacks (₦).
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin", "latin-ext"],
-});
-
-const serif = Instrument_Serif({
-  variable: "--font-instrument",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["italic"],
 });
 
 const inter = Inter({
@@ -74,7 +68,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${onest.variable} ${serif.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${outfit.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
       // The script below adds "js" before React loads.
       suppressHydrationWarning
     >

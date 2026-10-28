@@ -14,8 +14,8 @@ export function StayUpdated({ className }: { className?: string }) {
   return (
     <div className={cx("flex min-h-[250px] flex-col items-center justify-center gap-8 rounded-[32px] bg-white px-5 py-10 text-center shadow-[0_0_0_1px_rgb(11_18_32/0.05)] sm:p-12", className)}>
       <div className="flex flex-col gap-3">
-        <h2 className="text-2xl font-[450] leading-[1.35] tracking-[-0.72px] text-ink">Stay updated</h2>
-        <p className="text-[17px] font-[450] leading-[1.36] tracking-[-0.2px] text-ink/65 sm:text-xl">Be the first to hear about new services from Wymlink.</p>
+        <h2 className="text-2xl font-[450] leading-[1.35] tracking-[calc(0.05em_-_0.72px)] text-ink">Stay updated</h2>
+        <p className="text-[17px] font-[450] leading-[1.36] tracking-[calc(0.05em_-_0.2px)] text-ink/65 sm:text-xl">Be the first to hear about new services from Wymlink.</p>
       </div>
       {state === "done" ? (
         <p className="flex items-center gap-2 text-[17px] text-ink" role="status">
@@ -48,12 +48,12 @@ export function StayUpdated({ className }: { className?: string }) {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="h-[43px] w-full rounded-[36px] bg-ink/[0.03] px-4 text-base tracking-[-0.16px] text-ink outline-none placeholder:text-ink/30 focus:ring-2 focus:ring-brand-200 sm:w-[420px]"
+            className="h-[43px] w-full rounded-[36px] bg-ink/[0.03] px-4 text-base tracking-[calc(0.05em_-_0.16px)] text-ink outline-none placeholder:text-ink/30 focus:ring-2 focus:ring-brand-200 sm:w-[420px]"
           />
           <button
             type="submit"
             disabled={!email.trim() || state === "busy"}
-            className="h-[42px] w-full shrink-0 rounded-full bg-ink px-4 text-base font-[450] tracking-[-0.16px] text-white transition hover:bg-ink/85 disabled:opacity-45 sm:w-auto"
+            className="h-[42px] w-full shrink-0 rounded-full bg-ink px-4 text-base font-[450] tracking-[calc(0.05em_-_0.16px)] text-white transition hover:bg-ink/85 disabled:opacity-45 sm:w-auto"
           >
             {state === "busy" ? "Saving…" : "Notify me"}
           </button>

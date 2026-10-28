@@ -4,6 +4,7 @@ import { AppIcon } from "@/components/app/brand";
 import { IcArrowRight, IcPlus } from "@/components/app/icons";
 import { DevicePhone } from "@/components/site/device";
 import { Ghost } from "@/components/site/ghost";
+import { FluidBackground, type FluidPalette } from "@/components/site/fluid";
 import { RevealGroup } from "@/components/site/reveal";
 import { RevealWords } from "@/components/site/reveal_words";
 import { SiteFooter } from "@/components/site/site_footer";
@@ -40,17 +41,22 @@ const PANEL: Record<PanelTone, string> = {
   trust: "panel-trust",
   foot: "panel-foot",
   white: "bg-white",
-  outline: "bg-white shadow-[0_0_0_1px_rgb(11_18_32/0.05)]",
+  outline: "bg-white shadow-[0_0_0_1px_rgb(16_26_23/0.05)]",
   tint: "bg-tint",
   "tint-2": "bg-tint-2",
   canvas: "bg-canvas",
 };
 
+// The coloured panels carry the moving colour (components/site/fluid.tsx) over their gradient.
+const FLUID: Partial<Record<PanelTone, FluidPalette>> = { hero: "hero", dark: "dark", kit: "kit", trust: "trust", foot: "foot" };
+
 // A full-width rounded panel; every section sits on one. `ghost` adds the faint pixel
 // texture at the top.
 export function Panel({ tone = "hero", id, className, style, ghost, children }: { tone?: PanelTone; id?: string; className?: string; style?: CSSProperties; ghost?: boolean; children: ReactNode }) {
+  const fluid = FLUID[tone];
   return (
     <section id={id} style={style} className={cx("relative overflow-hidden rounded-[24px] px-5 sm:rounded-[32px] sm:px-12", PANEL[tone], className)}>
+      {fluid && <FluidBackground palette={fluid} />}
       {ghost && <Ghost className={tone === "dark" ? "invert" : undefined} />}
       <div className="relative">{children}</div>
     </section>
@@ -61,7 +67,7 @@ export function Panel({ tone = "hero", id, className, style, ghost, children }: 
 export function Eyebrow({ children, icon, light }: { children: ReactNode; icon?: IconType | "app" | "app-dark" | null; light?: boolean }) {
   const Icon = icon && icon !== "app" && icon !== "app-dark" ? icon : null;
   return (
-    <p className={cx("inline-flex items-center gap-3 text-[17px] font-[450] tracking-[-0.2px] sm:text-xl", light ? "text-white/80" : "text-ink/75")}>
+    <p className={cx("inline-flex items-center gap-3 text-[17px] font-[450] tracking-[calc(0.05em_-_0.2px)] sm:text-xl", light ? "text-white/80" : "text-ink/75")}>
       {(icon === undefined || icon === "app") && <AppIcon size={32} className="rounded-[9px]" />}
       {icon === "app-dark" && <AppIcon size={32} className="rounded-[9px] ring-1 ring-white/15 brightness-90" />}
       {Icon && <Icon className={cx("text-[28px]", light ? "text-brand-300" : "text-brand-400")} />}
@@ -73,25 +79,28 @@ export function Eyebrow({ children, icon, light }: { children: ReactNode; icon?:
 // The 72px display heading (48px on phones).
 export function Display({ as: Tag = "h2", light, className, children }: { as?: "h1" | "h2" | "h3"; light?: boolean; className?: string; children: ReactNode }) {
   return (
-    <Tag className={cx("text-balance text-[44px] font-[550] leading-[1.1] tracking-[-1.44px] sm:text-[60px] sm:tracking-[-2.6px] lg:text-[72px] lg:tracking-[-3.6px]", light ? "text-[#f6f7f4]" : "text-ink/90", className)}>
+    <Tag className={cx("text-balance text-[44px] font-[550] leading-[1.1] tracking-[calc(0.05em_-_1.44px)] sm:text-[60px] sm:tracking-[calc(0.05em_-_2.6px)] lg:text-[72px] lg:tracking-[calc(0.05em_-_3.6px)]", light ? "text-[#f6f7f4]" : "text-ink/90", className)}>
       {children}
     </Tag>
   );
 }
 
 // The italic serif word inside a display heading.
+// The highlighted words of a heading, as on the reference: same typeface and colour, a
+// little looser (-0.02em there, +0.05em for Outfit's narrower letters); in dark sections a
+// soft brand gradient.
 export const Accent = ({ children, light }: { children: ReactNode; light?: boolean }) => (
-  <span className={cx("font-serif text-[1.08em] font-normal italic leading-none tracking-[-0.02em]", light ? "text-glow pr-[0.06em]" : "text-brand-400")}>{children}</span>
+  <span className={cx("tracking-[0.03em]", light && "text-glow pr-[0.067em]")}>{children}</span>
 );
 
 export const Lead = ({ children, light, className }: { children: ReactNode; light?: boolean; className?: string }) => (
-  <p className={cx("text-pretty text-[17px] leading-[1.36] tracking-[-0.2px] sm:text-xl", light ? "text-white/70" : "text-ink/65", className)}>{children}</p>
+  <p className={cx("text-pretty text-[17px] leading-[1.36] tracking-[calc(0.05em_-_0.2px)] sm:text-xl", light ? "text-white/70" : "text-ink/65", className)}>{children}</p>
 );
 
 // Kept for older pages: a smaller section heading.
 export function Heading({ as: Tag = "h2", light, className, children }: { as?: "h1" | "h2" | "h3"; light?: boolean; className?: string; children: ReactNode }) {
   return (
-    <Tag className={cx("text-balance text-[28px] font-medium leading-[1.2] tracking-[-0.56px] sm:text-[40px] sm:tracking-[-1.2px]", light ? "text-white" : "text-ink/90", className)}>
+    <Tag className={cx("text-balance text-[28px] font-medium leading-[1.2] tracking-[calc(0.05em_-_0.56px)] sm:text-[40px] sm:tracking-[calc(0.05em_-_1.2px)]", light ? "text-white" : "text-ink/90", className)}>
       {children}
     </Tag>
   );
@@ -191,9 +200,9 @@ export function CtaLink({ href, children, variant = "primary", size = "lg", clas
       href={href}
       className={cx(
         "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full transition-[transform,background-color,color] active:scale-[0.99]",
-        size === "lg" && "h-12 px-6 text-[17px] font-medium tracking-[-0.17px]",
-        size === "md" && "h-11 px-5 text-[15px] font-medium tracking-[-0.15px]",
-        size === "sm" && "h-8 px-4 text-sm font-[450] tracking-[-0.14px]",
+        size === "lg" && "h-12 px-6 text-[17px] font-medium tracking-[calc(0.05em_-_0.17px)]",
+        size === "md" && "h-11 px-5 text-[15px] font-medium tracking-[calc(0.05em_-_0.15px)]",
+        size === "sm" && "h-8 px-4 text-sm font-[450] tracking-[calc(0.05em_-_0.14px)]",
         CTA[variant],
         className,
       )}
@@ -287,8 +296,8 @@ export function FeatureGrid({ items, columns = 3 }: { items: Array<{ icon: IconT
       {items.map(({ icon: Icon, title, body }) => (
         <li key={title} className="flex min-h-[193px] flex-col rounded-[24px] border border-ink/5 bg-white p-8">
           <Icon className="text-[32px] text-brand-400" />
-          <h3 className="mt-8 text-2xl font-[450] leading-[1.35] tracking-[-0.72px] text-ink">{title}</h3>
-          <p className="mt-2 text-base leading-[1.4] tracking-[-0.16px] text-ink/60">{body}</p>
+          <h3 className="mt-8 text-2xl font-[450] leading-[1.35] tracking-[calc(0.05em_-_0.72px)] text-ink">{title}</h3>
+          <p className="mt-2 text-base leading-[1.4] tracking-[calc(0.05em_-_0.16px)] text-ink/60">{body}</p>
         </li>
       ))}
     </ul>
@@ -300,8 +309,8 @@ export function Steps({ items }: { items: Array<{ title: string; body: string }>
     <ol className="grid gap-4 sm:gap-6 md:grid-cols-3">
       {items.map((s) => (
         <li key={s.title} className="flex flex-col rounded-[24px] border border-ink/5 bg-white p-8">
-          <h3 className="text-2xl font-[450] leading-[1.35] tracking-[-0.72px] text-ink">{s.title}</h3>
-          <p className="mt-2 text-base leading-[1.4] tracking-[-0.16px] text-ink/60">{s.body}</p>
+          <h3 className="text-2xl font-[450] leading-[1.35] tracking-[calc(0.05em_-_0.72px)] text-ink">{s.title}</h3>
+          <p className="mt-2 text-base leading-[1.4] tracking-[calc(0.05em_-_0.16px)] text-ink/60">{s.body}</p>
         </li>
       ))}
     </ol>
@@ -314,11 +323,11 @@ export function FaqList({ items }: { items: Array<{ q: string; a: ReactNode }> }
     <div>
       {items.map((f) => (
         <details key={f.q} className="group border-b border-ink/[0.06]">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-0 pb-[14px] pt-6 text-[17px] font-[450] tracking-[-0.17px] text-ink marker:content-none sm:px-4 sm:text-lg [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-6 px-0 pb-[14px] pt-6 text-[17px] font-[450] tracking-[calc(0.05em_-_0.17px)] text-ink marker:content-none sm:px-4 sm:text-lg [&::-webkit-details-marker]:hidden">
             {f.q}
             <IcPlus className="shrink-0 text-[22px] text-brand-400 transition-transform duration-200 group-open:rotate-45" aria-hidden />
           </summary>
-          <div className="pb-6 pr-10 text-base leading-6 tracking-[-0.18px] text-ink/60 sm:px-4">{f.a}</div>
+          <div className="pb-6 pr-10 text-base leading-6 tracking-[calc(0.05em_-_0.18px)] text-ink/60 sm:px-4">{f.a}</div>
         </details>
       ))}
     </div>
@@ -331,7 +340,7 @@ export function FaqSection({ items, more = { href: "/faq", label: "More question
     <section className="relative overflow-hidden px-5 py-20 sm:px-12 sm:py-[120px]">
       <Ghost height={380} />
       <Container className="relative grid gap-8 lg:grid-cols-[340px_1fr] lg:gap-0">
-        <h2 className="text-[32px] font-medium leading-[1.35] tracking-[-0.8px] text-ink sm:text-[40px]">FAQs</h2>
+        <h2 className="text-[32px] font-medium leading-[1.35] tracking-[calc(0.05em_-_0.8px)] text-ink sm:text-[40px]">FAQs</h2>
         <div>
           <FaqList items={items} />
           <Link href={more.href} className="group mt-8 inline-flex items-center gap-2.5 text-base font-[450] text-brand-500 sm:ml-4">
@@ -363,7 +372,7 @@ export function CtaBand({
         <div className="panel-kit grid overflow-hidden rounded-[32px] shadow-[0_0_0_1px_rgb(11_18_32/0.05)] md:grid-cols-[1.05fr_0.95fr]">
           <div className="flex flex-col items-start gap-5 px-7 py-12 sm:px-12 sm:py-14">
             <AppIcon size={48} className="rounded-[13px]" />
-            <h2 className="text-balance text-[32px] font-[550] leading-[1.1] tracking-[-1px] text-ink/90 sm:text-[44px] sm:tracking-[-1.6px]">
+            <h2 className="text-balance text-[32px] font-[550] leading-[1.1] tracking-[calc(0.05em_-_1px)] text-ink/90 sm:text-[44px] sm:tracking-[calc(0.05em_-_1.6px)]">
               {title ?? (
                 <>
                   Open your free <Accent>account</Accent>

@@ -17,9 +17,9 @@ const STACKS = [
 const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 const mix = (a: string, b: string, t: number) => `rgb(${hex(a).map((v, i) => Math.round(v + (hex(b)[i] - v) * t)).join(" ")})`;
 
-const GLOBE: CSSProperties = {
-  maskImage: "url(/assets/brand/globe-mono.png)",
-  WebkitMaskImage: "url(/assets/brand/globe-mono.png)",
+const MARK: CSSProperties = {
+  maskImage: "url(/assets/brand/mark-mono.png)",
+  WebkitMaskImage: "url(/assets/brand/mark-mono.png)",
   maskSize: "contain",
   WebkitMaskSize: "contain",
   maskRepeat: "no-repeat",
@@ -38,7 +38,7 @@ function Slab({ z, face, side, logo }: { z: number; face: string[]; side: string
         className="absolute inset-0 grid place-items-center rounded-[34px]"
         style={{ transform: `translateZ(${SLAB}px)`, background: `linear-gradient(135deg, ${face[0]}, ${face[1]})`, boxShadow: "inset 0 0 0 1px rgb(255 255 255 / 0.35)" }}
       >
-        {logo && <span className="block h-[36%] w-[46%] rotate-45 bg-white" style={GLOBE} />}
+        {logo && <span className="block h-[36%] w-[46%] rotate-45 bg-white" style={MARK} />}
       </div>
     </div>
   );

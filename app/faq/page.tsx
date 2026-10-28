@@ -85,7 +85,7 @@ export default function FaqPage() {
         <div className="flex flex-col gap-14">
           {GROUPS.map((g) => (
             <section key={g.id} id={g.id} className="scroll-mt-28">
-              <h2 className="mb-2 text-[28px] font-medium tracking-[-0.8px] text-ink sm:text-[32px]">{g.title}</h2>
+              <h2 className="mb-2 text-[28px] font-medium tracking-[calc(0.05em_-_0.8px)] text-ink sm:text-[32px]">{g.title}</h2>
               <FaqList items={g.items} />
             </section>
           ))}

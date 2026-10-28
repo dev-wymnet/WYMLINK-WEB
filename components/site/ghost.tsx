@@ -22,7 +22,7 @@ function tile() {
       else shapes += `<path d="M${x} ${y}h4l-2 4z"/>`;
     }
   }
-  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' fill='#0b1220'>${shapes}</svg>`)}")`;
+  return `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='${W}' height='${H}' fill='#1d2422'>${shapes}</svg>`)}")`;
 }
 
 const TILE = tile();

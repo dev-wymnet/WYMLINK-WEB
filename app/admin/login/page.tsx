@@ -74,7 +74,7 @@ function AdminLogin() {
     <div className="grid min-h-screen place-items-center bg-ink px-5 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3 text-center text-white">
-          <LogoMark size={80} />
+          <LogoMark size={80} tone="light" />
           <h1 className="text-3xl font-semibold tracking-[-0.035em]">Wymlink admin</h1>
           <p className="text-sm text-white/60">Authorised staff only. Every action is logged.</p>
         </div>
