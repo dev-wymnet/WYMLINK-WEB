@@ -36,14 +36,12 @@ export interface AuthActionResult {
 
 export interface AuthContextValue {
   user: AuthUser | null;
-  accessToken: string | null;
-  refreshToken: string | null;
   isAuthenticated: boolean;
   isHydrated: boolean;
   isLoading: boolean;
   login: (payload: LoginPayload) => Promise<AuthActionResult>;
   signup: (payload: SignupPayload) => Promise<AuthActionResult>;
   logout: () => Promise<void>;
-  refreshAccessToken: () => Promise<string | null>;
+  refreshUser: () => Promise<AuthUser | null>;
   authenticatedRequest: <T>(path: string, init?: RequestInit) => Promise<T>;
 }

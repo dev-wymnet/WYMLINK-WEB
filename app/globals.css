@@ -1,13 +1,85 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8fafc;
+  --background: #ffffff;
+  --foreground: #0b1220;
   --primary: #0f172a;
   --surface: #ffffff;
   --border: #e2e8f0;
-  --muted: rgb(203, 204, 206) /* --primary: #2563eb; */ --primary-soft: #eff6ff;
+  --muted: rgb(203, 204, 206);
+  --primary-soft: #eff6ff;
   --success: #16a34a;
   --error: #dc2626;
+}
+
+/* Breakpoints the site already uses (they lived in tailwind.config.ts, which Tailwind v4 ignores). */
+@theme {
+  --breakpoint-mxs: 365px;
+  --breakpoint-xs: 430px;
+  --breakpoint-xm: 500px;
+  --breakpoint-xsm: 680px;
+  --breakpoint-xmd: 900px;
+  --breakpoint-2lg: 1150px;
+  --breakpoint-xlg: 1200px;
+  --breakpoint-m2xl: 1700px;
+  --breakpoint-xm2xl: 1800px;
+  --breakpoint-3xl: 1930px;
+  --breakpoint-m3xl: 2000px;
+
+  /* Wymlink brand + app design tokens (same blues as the mobile app) */
+  --color-brand-50: #eef3ff;
+  --color-brand-100: #dbe5ff;
+  --color-brand-200: #bccdff;
+  --color-brand-300: #9db4ff;
+  --color-brand-400: #6f8cff;
+  --color-brand-500: #3461f5;
+  --color-brand-600: #1f45e6;
+  --color-brand-700: #1835c2;
+  --color-brand-900: #0e1e6b;
+  --color-indigo-deep: #2015af;
+  /* Flat panel tints (the site's sections sit on rounded panels, no gradients) */
+  --color-tint: #f2f5ff;
+  --color-tint-2: #e7edff;
+  --color-lime-accent: #d6f99e;
+  --color-lime-ink: #2f4a06;
+  --color-ink: #0b1220;
+  --color-ink-soft: #475467;
+  --color-ink-faint: #98a2b3;
+  --color-line: #e7eaf0;
+  --color-canvas: #f6f7fb;
+  --color-ok: #12b76a;
+  --color-ok-soft: #ecfdf3;
+  --color-warn: #f79009;
+  --color-warn-soft: #fffaeb;
+  --color-bad: #f04438;
+  --color-bad-soft: #fef3f2;
+
+  --radius-card: 1.5rem;
+  --radius-panel: 2rem;
+  --shadow-card: 0 0 0 1px rgba(11, 18, 32, 0.06), 0 1px 2px rgba(11, 18, 32, 0.04);
+  --shadow-pop: 0 0 0 1px rgba(11, 18, 32, 0.05), 0 24px 60px -24px rgba(14, 30, 107, 0.35);
+  --shadow-phone: 0 50px 90px -40px rgba(11, 18, 32, 0.55);
+  --shadow-chip: 0 0 0 1px rgba(11, 18, 32, 0.05), 0 12px 32px -12px rgba(11, 18, 32, 0.25);
+
+  /* Bank logo strip */
+  --animate-marquee: marquee 50s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 50s linear infinite;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes marquee-reverse {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 }
 
 @theme inline {
@@ -16,7 +88,7 @@
   --color-surface: var(--surface);
   --color-border: var(--border);
   --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted);
+  --color-muted-foreground: #475467;
   --color-primary: var(--primary);
   --color-primarySoft: var(--primary-soft);
   --color-success: var(--success);
@@ -26,7 +98,10 @@
   --color-primaryBtnBg: #2a68ed;
   --color-secondary: #0f172a;
 
-  --font-sans: "Inter", sans-serif;
+  /* Loaded by app/layout.tsx: Onest everywhere, Inter for any glyph Onest lacks (₦). */
+  --font-sans: var(--font-onest), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  /* The italic accent word in big headings. */
+  --font-serif: var(--font-instrument), "Times New Roman", serif;
   --font-aeonik: "Aeonik-Pro", sans-serif;
 }
 
@@ -46,36 +121,166 @@
   font-display: swap;
 }
 
-* {
-  box-sizing: border-box;
-}
+/* Resets live in the base layer so Tailwind utilities (e.g. text-brand-600 on a link) can override them. */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Inter", sans-serif;
-}
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 
-::selection {
-  background: color-mix(in srgb, var(--primary) 18%, white);
+  ::selection {
+    background: color-mix(in srgb, var(--primary) 18%, white);
+  }
 }
 @layer components {
   .containerclass {
     @apply w-[90%] mx-auto max-w-[1200px];
   }
+
+  /* Panel backgrounds: white at the top, easing into soft brand blue at the bottom. Each
+     stop is sampled from the reference and moved from its lavender to the Wymlink blue at
+     the same lightness and saturation. */
+  .panel-hero {
+    background:
+      radial-gradient(40% 30% at 0% 82%, rgb(226 233 255 / 0.7), transparent 75%),
+      radial-gradient(40% 30% at 82% 100%, rgb(220 228 250 / 0.6), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #fff 18%, #fcfdff 30%, #f3f6ff 45%, #eef2ff 60%, #e9eeff 75%, #e5ebfe 88%, #e2e8fc 100%);
+  }
+  .panel-dark {
+    background:
+      radial-gradient(70% 35% at 50% 100%, rgb(36 46 96 / 0.55), transparent 75%),
+      linear-gradient(180deg, #0f1013 0%, #0f1013 38%, #121523 60%, #181d35 82%, #1d223e 100%);
+  }
+  .panel-kit {
+    background:
+      radial-gradient(45% 30% at 0% 100%, rgb(195 208 250 / 0.85), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #fefeff 15%, #f8f9fe 30%, #ebeffb 45%, #e1e7fa 60%, #d9e0f8 75%, #d5ddf8 88%, #d2dbf7 100%);
+  }
+  .panel-trust {
+    background:
+      radial-gradient(40% 25% at 0% 97%, rgb(199 210 247 / 0.8), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #fefeff 15%, #fbfcfe 30%, #ebeffb 45%, #dce3fa 60%, #d2dbf8 75%, #ced8f7 88%, #ccd6f7 100%);
+  }
+  .panel-foot {
+    background:
+      radial-gradient(45% 40% at 20% 100%, rgb(212 221 249 / 0.7), transparent 75%),
+      linear-gradient(180deg, #fff 0%, #fff 15%, #fbfcfe 30%, #f3f6ff 45%, #ecf0fe 60%, #e4eafc 75%, #dde4fa 90%, #dae2f9 100%);
+  }
+
+  /* Accent word in a dark heading: soft brand gradient fill. */
+  .text-glow {
+    background: linear-gradient(134deg, #c8d4ff 0%, #7f99ff 49%, #c8d4ff 91%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+/* ---------- Reveal: entrance motion (components/site/reveal.tsx) ----------
+   Timings measured from the reference site. Pieces inside a [data-reveal] group stay hidden
+   until the group gets data-shown; html.js is set by an inline script, so without
+   JavaScript nothing is ever hidden. */
+.rv-word {
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+html.js [data-reveal] .rv,
+html.js [data-reveal] .rv-word,
+html.js [data-reveal] .rv-chip,
+html.js [data-reveal] .rv-phone,
+html.js [data-reveal] .rv-phone-side {
+  transition-delay: var(--rv-delay, 0ms);
+}
+/* Label, description, buttons: fade up. */
+html.js [data-reveal] .rv {
+  transition-property: opacity, transform;
+  transition-duration: var(--rv-dur, 350ms);
+  transition-timing-function: ease-out;
+}
+html.js [data-reveal]:not([data-shown]) .rv {
+  opacity: 0;
+  transform: translateY(var(--rv-y, 8px));
+}
+/* Heading words flip up, 50 ms apart. */
+html.js [data-reveal] .rv-word {
+  transition-property: opacity, transform;
+  transition-duration: 937ms;
+  transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+}
+html.js [data-reveal]:not([data-shown]) .rv-word {
+  opacity: 0;
+  transform: perspective(600px) translateY(0.6em) rotateX(45deg);
+}
+/* Logo chips on cards: unblur and rise, staggered. */
+html.js [data-reveal] .rv-chip {
+  transition-property: opacity, transform, filter;
+  transition-duration: 350ms;
+  transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+html.js [data-reveal]:not([data-shown]) .rv-chip {
+  opacity: 0;
+  filter: blur(4px);
+  transform: translateY(4px);
+}
+/* Hero phones rise into place: the centre one at 1.5 s, the sides at 1.6 s. */
+html.js [data-reveal] .rv-phone,
+html.js [data-reveal] .rv-phone-side {
+  transition:
+    opacity 600ms ease-out var(--rv-delay, 0ms),
+    transform 600ms cubic-bezier(0.19, 1, 0.22, 1) var(--rv-delay, 0ms);
+}
+html.js [data-reveal]:not([data-shown]) .rv-phone {
+  opacity: 0;
+  transform: translateY(10%) scale(0.975);
+}
+html.js [data-reveal]:not([data-shown]) .rv-phone-side {
+  opacity: 0;
+  transform: translateY(15%) scale(0.975);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] :is(.rv, .rv-word, .rv-chip, .rv-phone, .rv-phone-side) {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
+/* "Money in" pill: the live dot breathes (1.6 s). */
+.live-dot {
+  animation:
+    live-dot-opacity 1.6s ease-in-out infinite,
+    live-dot-scale 1.6s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+@keyframes live-dot-opacity {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@keyframes live-dot-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.85); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
 }

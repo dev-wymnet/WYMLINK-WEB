@@ -1,151 +1,123 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Use_Auth_Context } from "@/features/auth/api/auth_context";
-import { App_Text } from "@/components/ui_components/app_text";
-import { Icon_Circle } from "@/components/ui_components/app_icons";
-import { IoChevronBack } from "react-icons/io5";
+import { IcReceipt } from "@/components/app/icons";
+import { Alert, Badge, Card, CopyButton, Empty, Modal, PageHeader, Skeleton, cx, statusTone } from "@/components/app/ui";
+import { LedgerItem } from "@/components/app/ledger_item";
+import { errorMessage } from "@/lib/api/client";
+import { wallet, type LedgerRow } from "@/lib/api/wymlink";
+import { dateTime, naira, relativeDay, titleCase } from "@/lib/format";
 
-type Tx = {
-  id: string;
-  source: "wallet" | "telecom";
-  transactionType: string;
-  amount: number;
-  status: string;
-  timestamp: string;
-};
+type Filter = "all" | "in" | "out";
 
 export default function TransactionsPage() {
-  const router = useRouter();
-  const { isAuthenticated, isHydrated, authenticatedRequest } =
-    Use_Auth_Context();
-  const [loading, setLoading] = useState(true);
+  const [rows, setRows] = useState<LedgerRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [items, setItems] = useState<Tx[]>([]);
+  const [filter, setFilter] = useState<Filter>("all");
+  const [open, setOpen] = useState<LedgerRow | null>(null);
 
   useEffect(() => {
-    const bootstrap = async () => {
-      if (!authenticatedRequest) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const qs = new URLSearchParams({ limit: String(50) }).toString();
-        const resp = await authenticatedRequest<{ transactions: Tx[] }>(
-          `/wallets/transactions?${qs}`,
-          { method: "GET" },
-        );
-        setItems(resp.transactions ?? []);
-      } catch (e) {
-        setError(
-          e instanceof Error ? e.message : "Failed to load transactions",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (isHydrated && isAuthenticated) void bootstrap();
-  }, [authenticatedRequest, isAuthenticated, isHydrated]);
+    wallet
+      .transactions(200)
+      .then((r) => setRows(r.transactions ?? []))
+      .catch((e) => setError(errorMessage(e)));
+  }, []);
+
+  const groups = useMemo(() => {
+    const list = (rows ?? []).filter((r) => (filter === "all" ? true : filter === "in" ? r.direction === "credit" : r.direction === "debit"));
+    const map = new Map<string, LedgerRow[]>();
+    for (const r of list) {
+      const k = relativeDay(r.createdAt);
+      map.set(k, [...(map.get(k) ?? []), r]);
+    }
+    return [...map.entries()];
+  }, [rows, filter]);
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 sm:px-6 lg:px-10">
-      <div className="mx-auto w-full max-w-4xl">
-        <div className="flex items-center gap-3">
+    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      <PageHeader title="Transactions" subtitle="Every naira in and out of your wallet." />
+      <div className="flex gap-2" role="tablist">
+        {(["all", "in", "out"] as const).map((f) => (
           <button
-            type="button"
-            onClick={() => router.back()}
-            className="inline-flex items-center justify-center rounded-xl border border-border bg-surface p-2 text-secondary transition hover:bg-primarySoft"
-            aria-label="Go back"
+            key={f}
+            role="tab"
+            aria-selected={filter === f}
+            onClick={() => setFilter(f)}
+            className={cx("rounded-full px-4 py-2 text-sm font-medium transition", filter === f ? "bg-ink text-white" : "bg-white text-ink-soft shadow-[var(--shadow-card)] hover:text-ink")}
           >
-            <IoChevronBack size={18} />
+            {f === "all" ? "All" : f === "in" ? "Money in" : "Money out"}
           </button>
+        ))}
+      </div>
 
-          <App_Text variant="title">Transactions</App_Text>
-        </div>
-        <section className="mt-6 rounded-3xl border border-border bg-surface p-6 shadow-panel/10">
-          {loading ? (
-            <div className="grid gap-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-16 animate-pulse rounded-xl border border-border bg-surface"
-                />
-              ))}
+      {error && <Alert tone="bad">{error}</Alert>}
+
+      <Card flush>
+        {!rows && !error ? (
+          <div className="space-y-3 p-6">
+            {Array.from({ length: 6 }, (_, i) => (
+              <Skeleton key={i} className="h-12" />
+            ))}
+          </div>
+        ) : groups.length === 0 ? (
+          <Empty icon={<IcReceipt />} title="Nothing here yet" body="Your payments and deposits will show up here." />
+        ) : (
+          groups.map(([day, items]) => (
+            <section key={day}>
+              <h2 className="sticky top-16 z-10 border-b border-line bg-canvas/95 px-6 py-2 text-xs font-semibold uppercase tracking-wide text-ink-soft backdrop-blur">{day}</h2>
+              <ul className="divide-y divide-line">
+                {items.map((t) => (
+                  <li key={t.id}>
+                    <button onClick={() => setOpen(t)} className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition hover:bg-canvas sm:px-6">
+                      <LedgerItem row={t} meta={new Date(t.createdAt).toLocaleTimeString("en-NG", { hour: "numeric", minute: "2-digit" })} />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        )}
+      </Card>
+
+      <Modal open={Boolean(open)} onClose={() => setOpen(null)} title="Receipt">
+        {open && (
+          <div className="flex flex-col gap-5">
+            <div className="text-center">
+              <p className={cx("text-3xl font-semibold tabular-nums", open.direction === "credit" ? "text-ok" : "text-ink")}>
+                {open.direction === "credit" ? "+" : "−"}
+                {naira(open.amount)}
+              </p>
+              <div className="mt-2">
+                <Badge tone={statusTone(open.status)}>{titleCase(open.status)}</Badge>
+              </div>
             </div>
-          ) : error ? (
-            <>
-              <App_Text variant="subtitle">
-                Unable to load transactions
-              </App_Text>
-              <App_Text variant="body" className="mt-2">
-                {error}
-              </App_Text>
-            </>
-          ) : items.length === 0 ? (
-            <App_Text
-              variant="body"
-              className="text-muted text-center w-full bg-red-500"
-            >
-              No transactions yet.
-            </App_Text>
-          ) : (
-            <div className="divide-y divide-border">
-              {items.map((t) => (
-                <div
-                  key={t.id}
-                  className="flex items-center justify-between gap-4 py-4 hover:bg-primarySoft"
-                >
-                  <div className="flex min-w-0 items-center gap-4">
-                    <div
-                      className={`flex size-10 shrink-0 items-center justify-center rounded-full ${
-                        t.source === "telecom"
-                          ? "text-primary bg-primary/10"
-                          : "text-secondary bg-secondary/10"
-                      }`}
-                    >
-                      <Icon_Circle className="size-5" />
-                    </div>
-                    <div className="min-w-0">
-                      <App_Text variant="subtitle" className="truncate">
-                        {t.source === "telecom" ? "Telecom" : "Wallet"}:{" "}
-                        {t.transactionType}
-                      </App_Text>
-                      <App_Text variant="body" className="mt-1">
-                        {new Date(t.timestamp).toLocaleString()}
-                      </App_Text>
-                    </div>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <App_Text variant="subtitle">
-                      {t.amount.toLocaleString("en-NG", {
-                        maximumFractionDigits: 2,
-                      })}
-                    </App_Text>
-                    <span
-                      className={[
-                        "rounded-full border px-3 py-1.5 text-xs font-semibold",
-                        statusColor(t.status),
-                      ].join(" ")}
-                    >
-                      {t.status}
-                    </span>
-                  </div>
+            <dl className="divide-y divide-line rounded-2xl border border-line text-sm">
+              {[
+                ["Type", titleCase(open.transactionType)],
+                ["Description", open.description || "—"],
+                ["Date", dateTime(open.createdAt)],
+                ["Balance before", open.balanceBefore != null ? naira(open.balanceBefore) : "—"],
+                ["Balance after", open.balanceAfter != null ? naira(open.balanceAfter) : "—"],
+              ].map(([k, v]) => (
+                <div key={k} className="flex justify-between gap-4 px-4 py-3">
+                  <dt className="text-ink-soft">{k}</dt>
+                  <dd className="text-right font-medium text-ink">{v}</dd>
                 </div>
               ))}
-            </div>
-          )}
-        </section>
-      </div>
-    </main>
+              {open.referenceCode && (
+                <div className="flex items-center justify-between gap-4 px-4 py-3">
+                  <dt className="text-ink-soft">Reference</dt>
+                  <dd className="flex items-center gap-1 font-mono text-xs text-ink">
+                    <span className="max-w-[160px] truncate">{open.referenceCode}</span>
+                    <CopyButton value={open.referenceCode} label="" />
+                  </dd>
+                </div>
+              )}
+            </dl>
+            <p className="text-center text-xs text-ink-faint">Problem with this transaction? Email info@wymnet.org with the reference.</p>
+          </div>
+        )}
+      </Modal>
+    </div>
   );
-}
-
-function statusColor(status: string) {
-  const s = status.toLowerCase();
-  if (s === "success") return "text-success bg-success/10 border-success/20";
-  if (s === "failed" || s === "error")
-    return "text-error bg-error/10 border-error/20";
-  if (s === "pending" || s === "processing")
-    return "text-amber-600 bg-amber-500/10 border-amber-500/20";
-  return "text-muted bg-muted/10 border-border";
 }

@@ -1,13 +1,28 @@
-import { Auth_Shell } from "@/features/auth/components/auth_shell";
-import { Login_Form } from "@/features/auth/components/login_form";
+import Link from "next/link";
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import { AuthLayout } from "@/components/app/auth_layout";
+import { SignInForm } from "@/features/auth/components/sign_in";
+
+export const metadata: Metadata = { title: "Sign in" };
 
 export default function LoginPage() {
   return (
-    <Auth_Shell
-      subtitle="Sign in to send money, pay bills, and manage your wallet."
+    <AuthLayout
       title="Welcome back"
+      subtitle="Sign in to your Wymlink account."
+      footer={
+        <>
+          New to Wymlink?{" "}
+          <Link href="/auth/signup" className="font-medium text-brand-600 hover:underline">
+            Create an account
+          </Link>
+        </>
+      }
     >
-      <Login_Form />
-    </Auth_Shell>
+      <Suspense>
+        <SignInForm />
+      </Suspense>
+    </AuthLayout>
   );
 }

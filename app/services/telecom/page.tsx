@@ -1,43 +1,43 @@
-import Hero_Layout from "@/components/layout_components/hero_layout";
-import { Fragment } from "react";
-import Home_Hero from "@/features/home/components/home_hero";
-import Airtime_Data_FAq from "@/features/home/components/Airtime_Data_FAq";
-import First_Section_Heading from "@/components/widget_components/first_section_component";
-import First_Section from "@/features/home/components/First_Section";
-import Flex_Sections from "@/features/home/components/Flex_Sections";
-import GetInTouch from "@/components/widget_components/get_in_touch";
-import Footer from "@/components/layout_components/footer";
-import Nav_Bar from "@/src/components/layout/Nav_bar";
-// import Nav_Bar from "@/components/layout_components/nav";
+import type { Metadata } from "next";
+import { IcClock, IcRefreshCw, IcSignal, IcSmartphone, IcUsers, IcWifi } from "@/components/app/icons";
+import { PhoneRise } from "@/components/site/blocks";
+import { ServicePage } from "@/components/site/service_page";
 
-const Telecom_Services_Page = () => {
-  return (
-    <Fragment>
-      <Nav_Bar
-        bgColor="bg-[#CDF2FC]"
-        logoColor="white"
-        linkColor="text-[#091A30]"
-        linkDColor="text-[#091A30]"
-        getStartedBtn="bg-white text-[#091A30]"
-      />
-      <Hero_Layout sectionClassName="bg-[#CDF2FC]">
-        <Home_Hero />
-      </Hero_Layout>
-      <First_Section_Heading
-        title={`Buy Airtime, Get Cashbacks`}
-        textStyle="font-[200]"
-        headingStyle=" font-[500] xmd:leading-[56px] xmd:text-[52px] text-3xl font-aeonik"
-        containerClass="w-[95%] max-w-screen-2lg 3xl:max-w-xlg mx-auto flex flex-col items-center justify-center py-[20px] mt-[40px]"
-        description={`Stay connected without interruption, top up your phone instantly, anytime, anywhere and get 2% cashbacks instantly.
-          We pay you, when you pay bills.`}
-      />
-      <First_Section />
-      <Flex_Sections />
-      <Airtime_Data_FAq />
-      <GetInTouch />
-      <Footer />
-    </Fragment>
-  );
+export const metadata: Metadata = {
+  title: "Buy airtime & data",
+  description: "Top up MTN, Airtel, Glo and 9mobile airtime and data bundles instantly from your Wymlink wallet.",
 };
 
-export default Telecom_Services_Page;
+export default function TelecomPage() {
+  return (
+    <ServicePage
+      photo={{ src: "/assets/people/young-man.webp", alt: "A young man looking at his phone" }}
+      eyebrow="Airtime & data"
+      icon={IcSmartphone}
+      title="Top up any line in seconds"
+      body="Airtime and data bundles for MTN, Airtel, Glo and 9mobile, for you or anyone else, straight from your Wymlink wallet."
+      buyHref="/dashboard/airtime"
+      buyLabel="Buy airtime now"
+      aside={<PhoneRise src="/assets/app/airtime.webp" alt="Buying airtime in Wymlink: pick the network and amount" priority />}
+      steps={[
+        { title: "Enter the phone number", body: "We detect the network from the number. You can always change it." },
+        { title: "Choose an amount or bundle", body: "Pick any airtime amount, or a daily, weekly or monthly data plan." },
+        { title: "Confirm with your PIN", body: "Airtime and data land on the line within seconds." },
+      ]}
+      features={[
+        { icon: IcSignal, title: "All four networks", body: "MTN, Airtel, Glo and 9mobile in one place." },
+        { icon: IcWifi, title: "Clear data plans", body: "See the bundle size, validity and price before you buy." },
+        { icon: IcUsers, title: "For anyone", body: "Top up family and friends: any Nigerian number works." },
+        { icon: IcClock, title: "Delivered instantly", body: "Most top-ups arrive in seconds, any time of day." },
+        { icon: IcRefreshCw, title: "Refund if it fails", body: "If the network can't deliver, the money returns to your wallet." },
+        { icon: IcSmartphone, title: "No USSD codes", body: "No dialling, no data-plan codes to remember." },
+      ]}
+      faq={[
+        { q: "Which networks are supported?", a: "MTN, Airtel, Glo and 9mobile, for both airtime and data." },
+        { q: "What's the minimum airtime purchase?", a: "₦50. The most you can buy in one go is ₦50,000, within your account's daily limit." },
+        { q: "How fast does it arrive?", a: "Usually within seconds. During network outages it can take a little longer; your transaction history shows the live status." },
+        { q: "What if I typed the wrong number?", a: "Airtime sent to a valid number can't be reversed, so check the number and network on the confirmation screen before entering your PIN." },
+      ]}
+    />
+  );
+}

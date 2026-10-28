@@ -1,94 +1,85 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Use_Auth_Context } from "@/features/auth/api/auth_context";
-import { App_Text } from "@/components/ui_components/app_text";
-import { App_Button } from "@/components/ui_components/app_button";
-import { getMyWallet } from "@/features/wallet/api/wallet_endpoints";
-import { IoChevronBack } from "react-icons/io5";
+import { IcBuilding2, IcClock, IcIdCard, IcShieldCheck } from "@/components/app/icons";
+import { Alert, Button, Card, CopyButton, PageHeader, Skeleton } from "@/components/app/ui";
+import { useAccount } from "@/features/app/account_context";
 
-export default function FundAccountPage() {
-  const { isAuthenticated, isHydrated, authenticatedRequest } =
-    Use_Auth_Context();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [accountNumber, setAccountNumber] = useState<string>("");
-  const [bankName, setBankName] = useState<string>("");
-
-  useEffect(() => {
-    const bootstrap = async () => {
-      if (!authenticatedRequest) return;
-      setLoading(true);
-      setError(null);
-      try {
-        const resp = await getMyWallet(authenticatedRequest);
-        setAccountNumber(resp.accountNumber);
-        setBankName(resp.bankName);
-      } catch (e) {
-        setError(
-          e instanceof Error ? e.message : "Failed to load account details",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (isHydrated && isAuthenticated) void bootstrap();
-  }, [authenticatedRequest, isAuthenticated, isHydrated]);
+export default function FundPage() {
+  const { home, loading, bvnVerified, ninVerified } = useAccount();
+  const w = home?.wallet;
+  const name = home?.user.fullName;
 
   return (
-    <main className="min-h-screen bg-background px-4 py-6 sm:px-6 lg:px-10">
-      <div className="mx-auto w-full max-w-2xl">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => history.back()}
-            className="inline-flex items-center justify-center rounded-xl border border-border bg-surface p-2 text-secondary transition hover:bg-primarySoft"
-            aria-label="Go back"
-          >
-            <IoChevronBack size={18} />
-          </button>
-          <App_Text variant="title">Fund Account</App_Text>
-        </div>
-        <section className="mt-6 rounded-3xl border border-border bg-surface p-6 shadow-panel/10">
-          {loading ? (
-            <div className="h-28 animate-pulse rounded-2xl border border-border bg-surface" />
-          ) : error ? (
-            <>
-              <App_Text variant="subtitle">
-                Unable to fetch reserved account
-              </App_Text>
-              <App_Text variant="body" className="mt-2">
-                {error}
-              </App_Text>
-              <App_Button
-                className="mt-4 w-fit"
-                onClick={() => location.reload()}
-              >
-                Retry
-              </App_Button>
-            </>
-          ) : (
-            <div className="grid gap-5">
-              <div className="rounded-2xl border border-border bg-background p-4">
-                <App_Text variant="caption">Bank</App_Text>
-                <App_Text variant="subtitle" className="mt-1">
-                  {bankName}
-                </App_Text>
-              </div>
-              <div className="rounded-2xl border border-border bg-background p-4">
-                <App_Text variant="caption">Account Number</App_Text>
-                <App_Text variant="subtitle" className="mt-1">
-                  {accountNumber}
-                </App_Text>
-              </div>
-              <App_Text variant="body" className="text-muted">
-                Transfer funds to your reserved account above. Your wallet will
-                be credited automatically once payment is confirmed.
-              </App_Text>
+    <div className="mx-auto flex max-w-2xl flex-col gap-6">
+      <PageHeader title="Add money" subtitle="Transfer from any Nigerian bank app to your personal Wymlink account." />
+
+      {loading ? (
+        <Skeleton className="h-56 w-full" />
+      ) : w?.accountNumber ? (
+        <Card flush className="overflow-hidden">
+          <div className="bg-brand-600 px-6 py-7 text-white">
+            <p className="text-sm text-brand-100">Your Wymlink account number</p>
+            <div className="mt-1 flex flex-wrap items-center gap-3">
+              <p className="text-3xl font-semibold tracking-[0.12em] tabular-nums">{w.accountNumber}</p>
+              <span className="[&_button]:bg-white/10 [&_button]:text-white [&_button:hover]:bg-white/20">
+                <CopyButton value={w.accountNumber} label="Copy number" />
+              </span>
             </div>
-          )}
-        </section>
-      </div>
-    </main>
+          </div>
+          <dl className="grid divide-y divide-line sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+            <div className="px-6 py-4">
+              <dt className="text-xs text-ink-soft">Bank</dt>
+              <dd className="font-medium text-ink">{w.bankName || "—"}</dd>
+            </div>
+            <div className="px-6 py-4">
+              <dt className="text-xs text-ink-soft">Account name</dt>
+              <dd className="font-medium text-ink">{name || "—"}</dd>
+            </div>
+          </dl>
+        </Card>
+      ) : (
+        <Card>
+          <div className="flex flex-col items-center gap-3 py-4 text-center">
+            <span className="grid size-14 place-items-center text-4xl text-brand-600">
+              <IcIdCard />
+            </span>
+            <h2 className="font-semibold text-ink">Verify your identity to get an account number</h2>
+            <p className="max-w-md text-sm text-ink-soft">
+              {bvnVerified || ninVerified
+                ? "Your identity is verified — your account number is being created. Check back in a few minutes."
+                : "Nigerian rules require us to verify your BVN or NIN before we can open a bank account number for you."}
+            </p>
+            {!(bvnVerified || ninVerified) && <Button href="/dashboard/security#kyc">Verify now</Button>}
+          </div>
+        </Card>
+      )}
+
+      <Card>
+        <h2 className="mb-4 font-semibold text-ink">How it works</h2>
+        <ol className="flex flex-col gap-4">
+          {[
+            { icon: IcBuilding2, t: "Open your bank app", b: "Choose transfer to another bank and enter the account number above." },
+            { icon: IcClock, t: "Money arrives in minutes", b: "Your Wymlink balance updates automatically — no need to send proof." },
+            { icon: IcShieldCheck, t: "Only you can spend it", b: "Every payment needs your 4-digit transaction PIN." },
+          ].map(({ icon: Icon, t, b }, i) => (
+            <li key={t} className="flex gap-3">
+              <span className="grid size-10 shrink-0 place-items-center text-ink-soft text-2xl">
+                <Icon aria-hidden />
+              </span>
+              <div>
+                <p className="font-medium text-ink">
+                  {i + 1}. {t}
+                </p>
+                <p className="text-sm text-ink-soft">{b}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </Card>
+
+      <Alert tone="info" title="Delayed deposit?">
+        Transfers usually land within minutes. If yours hasn&apos;t arrived after 30 minutes, email info@wymnet.org with your bank&apos;s receipt.
+      </Alert>
+    </div>
   );
 }

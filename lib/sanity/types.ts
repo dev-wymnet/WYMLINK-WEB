@@ -1,4 +1,6 @@
-export type SanityRef<T extends string = string> = {
+import type { PortableTextBlock } from '@portabletext/react'
+
+export type SanityRef = {
   _type: 'reference'
   _ref: string
 }
@@ -41,7 +43,7 @@ export type Post = {
   updatedAt?: string | null
   featured?: boolean | null
   tags?: string[]
-  body: any[]
+  body: PortableTextBlock[]
   seoTitle?: string | null
   seoDescription?: string | null
   seoImage?: ImageAsset | null

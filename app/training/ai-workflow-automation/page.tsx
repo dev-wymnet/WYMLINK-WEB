@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import Nav_Bar from "@/src/components/layout/Nav_bar";
+import { SiteHeader } from "@/components/site/site_header";
+import { SiteFooter } from "@/components/site/site_footer";
 import { registerForTraining } from "@/features/training/api/training.api";
 import { getApiErrorMessage } from "@/features/auth/api/auth_endpoints";
-import { FooterImage, GlobalBg } from "@/src/assets";
+import { GlobalBg } from "@/src/assets";
 import { appName } from "@/data/constants/app_name";
 
 interface FormState {
@@ -345,20 +346,12 @@ const AIWorkflowAutomationPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col">
-      <Nav_Bar
-        bgColor="bg-transparent"
-        linkColor="text-white"
-        linkDColor="text-black"
-        getStartedBtn="bg-white text-black"
-        iconColor="text-white"
-        disableScrollStyleChange
-      />
+    <div className="min-h-screen bg-ink text-white flex flex-col">
+      <SiteHeader tone="brand" />
+      <div className="h-[76px] sm:h-[82px]" aria-hidden />
 
       <section className="relative overflow-hidden pb-24 pt-16 md:pt-24">
         <div className="pointer-events-none absolute inset-0 opacity-60">
-          <div className="absolute -left-40 top-0 h-72 w-72 rounded-full bg-gradient-to-br from-emerald-400/30 via-sky-500/20 to-transparent blur-3xl" />
-          <div className="absolute -right-40 top-40 h-80 w-80 rounded-full bg-gradient-to-tr from-indigo-500/30 via-fuchsia-500/20 to-transparent blur-3xl" />
           <Image
             src={GlobalBg}
             alt="AI workflow background"
@@ -368,12 +361,12 @@ const AIWorkflowAutomationPage = () => {
 
         <div className="relative z-10 mx-auto flex max-w-6xl flex-col gap-12 px-4 md:flex-row md:items-center md:px-6 lg:px-8">
           <div className="flex-1 space-y-6">
-            <p className="inline-flex items-center rounded-full bg-slate-900/60 px-3 py-1 text-xs font-medium text-emerald-300 ring-1 ring-emerald-400/40">
+            <p className="inline-flex items-center text-sm font-medium text-brand-300">
               {appName} Cybersecurity Program · Abuja · Hybrid Learning
             </p>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
               Build a Career in{" "}
-              <span className="bg-gradient-to-r from-emerald-300 via-sky-300 to-indigo-300 bg-clip-text text-transparent">
+              <span className="text-brand-300">
                 Cybersecurity
               </span>
             </h1>
@@ -386,13 +379,13 @@ const AIWorkflowAutomationPage = () => {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <button
                 onClick={scrollToForm}
-                className="rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                className="rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition hover:bg-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
               >
                 Register Now
               </button>
               <button
                 onClick={scrollToDetails}
-                className=" rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-slate-500 hover:bg-slate-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 "
+                className=" rounded-full border border-slate-700 px-6 py-3 text-sm font-semibold text-slate-100 transition hover:border-slate-500 hover:bg-slate-900/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink "
               >
                 View Program Details
               </button>
@@ -410,14 +403,14 @@ const AIWorkflowAutomationPage = () => {
               </div>
               <div>
                 <p className=" font-medium text-slate-100 "> Investment </p>
-                <p className=" text-emerald-300 font-semibold "> ₦50,000 </p>
+                <p className=" text-brand-300 font-semibold "> ₦50,000 </p>
               </div>
             </div>
           </div>
 
           <div className=" flex-1 ">
-            <div className=" mx-auto max-w-md rounded-3xl bg-slate-900/70 p-6 shadow-2xl shadow-emerald-500/20 ring-1 ring-slate-800 backdrop-blur ">
-              <p className=" text-xs font-medium uppercase tracking-[0.2em] text-emerald-300 ">
+            <div className=" mx-auto max-w-md rounded-3xl bg-slate-900/70 p-6 shadow-2xl shadow-brand-600/20 ring-1 ring-slate-800 backdrop-blur ">
+              <p className=" text-xs font-medium uppercase tracking-[0.2em] text-brand-300 ">
                 CYBERSECURITY PROGRAM
               </p>
               <p className=" mt-2 text-sm text-slate-200 ">
@@ -464,7 +457,7 @@ const AIWorkflowAutomationPage = () => {
       </section>
 
       {/* Course Overview / Why Attend */}
-      <section className="bg-slate-950/80 py-16" id="program-details">
+      <section className="bg-ink/80 py-16" id="program-details">
         <div className="mx-auto max-w-6xl px-4 md:px-6 lg:px-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <div>
@@ -490,10 +483,10 @@ const AIWorkflowAutomationPage = () => {
             ].map((item) => (
               <div
                 key={item}
-                className="group rounded-2xl bg-gradient-to-b from-slate-900 to-slate-950/80 p-[1px] shadow-lg shadow-black/40"
+                className="group rounded-2xl bg-white/10 p-[1px] shadow-lg shadow-black/40"
               >
-                <div className="flex h-full flex-col rounded-2xl bg-slate-950/80 p-5 transition group-hover:bg-slate-900/80">
-                  <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/30">
+                <div className="flex h-full flex-col rounded-2xl bg-ink/80 p-5 transition group-hover:bg-slate-900/80">
+                  <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-600/10 text-brand-300 ring-1 ring-brand-600/30">
                     <span className="text-lg">✓</span>
                   </div>
                   <p className="text-sm font-medium text-slate-50">{item}</p>
@@ -505,7 +498,7 @@ const AIWorkflowAutomationPage = () => {
       </section>
 
       {/* Learning Journey */}
-      <section className="bg-slate-950 py-16">
+      <section className="bg-ink py-16">
         <div className="mx-auto max-w-6xl px-4 md:px-6 lg:px-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -535,7 +528,7 @@ const AIWorkflowAutomationPage = () => {
                 }
                 className={`rounded-full px-4 py-1.5 font-medium transition ${
                   activeStage === stage.id
-                    ? "bg-emerald-400 text-slate-950"
+                    ? "bg-brand-600 text-white"
                     : "text-slate-200 hover:text-white"
                 }`}
               >
@@ -547,7 +540,7 @@ const AIWorkflowAutomationPage = () => {
           {/* Beginner Modules */}
           {activeStage === "beginner" && (
             <div className="mt-8 space-y-4 text-sm text-slate-200">
-              <p className="text-xs uppercase tracking-[0.2em] text-emerald-300">
+              <p className="text-xs uppercase tracking-[0.2em] text-brand-300">
                 Beginner Level · Build Your Cybersecurity Foundation
               </p>
               <p className="max-w-3xl text-sm text-slate-300">
@@ -559,7 +552,7 @@ const AIWorkflowAutomationPage = () => {
                 {beginnerModules.map((module) => (
                   <div
                     key={module.title}
-                    className="rounded-2xl bg-slate-950/80 p-5 ring-1 ring-slate-800"
+                    className="rounded-2xl bg-ink/80 p-5 ring-1 ring-slate-800"
                   >
                     <h3 className="text-sm font-semibold text-slate-50">
                       {module.title}
@@ -567,7 +560,7 @@ const AIWorkflowAutomationPage = () => {
                     <ul className="mt-3 space-y-1.5 text-xs text-slate-300">
                       {module.items.map((item) => (
                         <li key={item} className="flex gap-2">
-                          <span className="mt-[2px] text-emerald-300">•</span>
+                          <span className="mt-[2px] text-brand-300">•</span>
                           <span>{item}</span>
                         </li>
                       ))}
@@ -581,7 +574,7 @@ const AIWorkflowAutomationPage = () => {
           {/* Intermediate Modules */}
           {activeStage === "intermediate" && (
             <div className="mt-8 space-y-4 text-sm text-slate-200">
-              <p className="text-xs uppercase tracking-[0.2em] text-emerald-300">
+              <p className="text-xs uppercase tracking-[0.2em] text-brand-300">
                 Intermediate Level · Develop Professional Cybersecurity Skills
               </p>
               <p className="max-w-3xl text-sm text-slate-300">
@@ -592,7 +585,7 @@ const AIWorkflowAutomationPage = () => {
                 {intermediateModules.map((module) => (
                   <div
                     key={module.title}
-                    className="rounded-2xl bg-slate-950/80 p-5 ring-1 ring-slate-800"
+                    className="rounded-2xl bg-ink/80 p-5 ring-1 ring-slate-800"
                   >
                     <h3 className="text-sm font-semibold text-slate-50">
                       {module.title}
@@ -600,7 +593,7 @@ const AIWorkflowAutomationPage = () => {
                     <ul className="mt-3 space-y-1.5 text-xs text-slate-300">
                       {module.items.map((item) => (
                         <li key={item} className="flex gap-2">
-                          <span className="mt-[2px] text-emerald-300">•</span>
+                          <span className="mt-[2px] text-brand-300">•</span>
                           <span>{item}</span>
                         </li>
                       ))}
@@ -614,7 +607,7 @@ const AIWorkflowAutomationPage = () => {
           {/* Advanced Specializations */}
           {activeStage === "advanced" && (
             <div className="mt-8 space-y-4 text-sm text-slate-200">
-              <p className="text-xs uppercase tracking-[0.2em] text-emerald-300">
+              <p className="text-xs uppercase tracking-[0.2em] text-brand-300">
                 Advanced Level · Choose Your Cybersecurity Career Path
               </p>
               <p className="max-w-3xl text-sm text-slate-300">
@@ -625,7 +618,7 @@ const AIWorkflowAutomationPage = () => {
                 {specializationTracks.map((track) => (
                   <div
                     key={track.title}
-                    className="rounded-2xl bg-slate-950/80 p-5 ring-1 ring-slate-800"
+                    className="rounded-2xl bg-ink/80 p-5 ring-1 ring-slate-800"
                   >
                     <h3 className="text-sm font-semibold text-slate-50">
                       {track.title}
@@ -633,7 +626,7 @@ const AIWorkflowAutomationPage = () => {
                     <ul className="mt-3 space-y-1.5 text-xs text-slate-300">
                       {track.items.map((item) => (
                         <li key={item} className="flex gap-2">
-                          <span className="mt-[2px] text-emerald-300">•</span>
+                          <span className="mt-[2px] text-brand-300">•</span>
                           <span>{item}</span>
                         </li>
                       ))}
@@ -647,7 +640,7 @@ const AIWorkflowAutomationPage = () => {
       </section>
 
       {/* Program Info + Payment Card + Form */}
-      <section className="bg-slate-950/95 py-16">
+      <section className="bg-ink/95 py-16">
         <div className="mx-auto max-w-6xl px-4 md:px-6 lg:px-8 grid gap-10 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
           {/* Program Info + Payment */}
           <div className="space-y-8">
@@ -656,19 +649,19 @@ const AIWorkflowAutomationPage = () => {
                 Program Information
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-2xl bg-slate-950/80 p-4 ring-1 ring-slate-800">
+                <div className="rounded-2xl bg-ink/80 p-4 ring-1 ring-slate-800">
                   <p className="text-xs font-medium text-slate-300">Date</p>
                   <p className="mt-1 text-sm font-semibold text-slate-50">
                     5 September – 12 September
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-950/80 p-4 ring-1 ring-slate-800">
+                <div className="rounded-2xl bg-ink/80 p-4 ring-1 ring-slate-800">
                   <p className="text-xs font-medium text-slate-300">Venue</p>
                   <p className="mt-1 text-sm font-semibold text-slate-50">
                     Novare Mall, Wuse, Abuja
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-950/80 p-4 ring-1 ring-slate-800">
+                <div className="rounded-2xl bg-ink/80 p-4 ring-1 ring-slate-800">
                   <p className="text-xs font-medium text-slate-300">Format</p>
                   <p className="mt-1 text-sm font-semibold text-slate-50">
                     Hybrid (Physical + Live Online Sessions)
@@ -678,7 +671,7 @@ const AIWorkflowAutomationPage = () => {
                     online.
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-950/80 p-4 ring-1 ring-slate-800">
+                <div className="rounded-2xl bg-ink/80 p-4 ring-1 ring-slate-800">
                   <p className="text-xs font-medium text-slate-300">
                     Certificate
                   </p>
@@ -694,14 +687,13 @@ const AIWorkflowAutomationPage = () => {
               <h3 className="text-lg font-semibold tracking-tight">
                 Payment Details
               </h3>
-              <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-950 shadow-xl shadow-emerald-500/20 ring-1 ring-slate-800">
+              <div className="overflow-hidden rounded-3xl bg-white/[0.04] shadow-xl shadow-black/30 ring-1 ring-slate-800">
                 <div className="relative p-6">
-                  <div className="pointer-events-none absolute -right-10 -top-16 h-40 w-40 rounded-full bg-emerald-500/15 blur-3xl" />
-                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-emerald-300">
+                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-brand-300">
                     CYBERSECURITY PROGRAM
                   </p>
                   <p className="mt-3 text-xs text-slate-300">Price</p>
-                  <p className="text-3xl font-semibold text-emerald-300">
+                  <p className="text-3xl font-semibold text-brand-300">
                     ₦50,000
                   </p>
 
@@ -726,14 +718,14 @@ const AIWorkflowAutomationPage = () => {
                       <button
                         type="button"
                         onClick={copyAccountNumber}
-                        className="rounded-full border border-emerald-400/60 px-3 py-1.5 text-xs font-medium text-emerald-100 transition hover:bg-emerald-400/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                        className="rounded-full border border-brand-500/60 px-3 py-1.5 text-xs font-medium text-brand-100 transition hover:bg-brand-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                       >
                         Copy
                       </button>
                     </div>
                   </div>
 
-                  <p className="mt-4 text-[11px] leading-relaxed text-emerald-200/90">
+                  <p className="mt-4 text-[11px] leading-relaxed text-brand-200/90">
                     After payment, take a screenshot of your registration
                     confirmation and payment receipt, then send both to the
                     {appName} support team for verification.
@@ -746,14 +738,12 @@ const AIWorkflowAutomationPage = () => {
           {/* Registration Form + FAQ */}
           <div className="space-y-10">
             {registrationComplete && registeredParticipant ? (
-              <div className="rounded-3xl bg-slate-950/80 p-6 shadow-lg shadow-emerald-500/20 ring-1 ring-emerald-500/40">
+              <div className="rounded-3xl bg-ink/80 p-6 shadow-lg shadow-brand-600/20 ring-1 ring-brand-600/40">
                 <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
                   Registration Successful
                 </h2>
                 <p className="mt-2 text-sm text-slate-300">
-                  Thank you for registering for the{" "}
-                  <span className="font-semibold">AI Workflow Automation</span>{" "}
-                  training program.
+                  Thank you for registering for the training programme.
                 </p>
                 <div className="mt-4 space-y-2 rounded-2xl bg-slate-900/80 p-4 text-sm text-slate-100">
                   <div className="flex justify-between gap-4">
@@ -785,9 +775,9 @@ const AIWorkflowAutomationPage = () => {
                 </div>
               </div>
             ) : (
-              <div className="rounded-3xl bg-slate-950/80 p-6 shadow-lg shadow-black/40 ring-1 ring-slate-800">
+              <div className="rounded-3xl bg-ink/80 p-6 shadow-lg shadow-black/40 ring-1 ring-slate-800">
                 <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  Register for AI Workflow Automation
+                  Register for the programme
                 </h2>
                 <p className="mt-2 text-sm text-slate-300">
                   Fill in your details to reserve a seat. You&apos;ll see a
@@ -815,7 +805,7 @@ const AIWorkflowAutomationPage = () => {
                       autoComplete="name"
                       value={form.fullName}
                       onChange={handleChange("fullName")}
-                      className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+                      className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                       placeholder="Jane Doe"
                     />
                     {errors.fullName && (
@@ -839,7 +829,7 @@ const AIWorkflowAutomationPage = () => {
                       autoComplete="email"
                       value={form.email}
                       onChange={handleChange("email")}
-                      className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+                      className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                       placeholder="you@example.com"
                     />
                     {errors.email && (
@@ -863,7 +853,7 @@ const AIWorkflowAutomationPage = () => {
                       autoComplete="tel"
                       value={form.phone}
                       onChange={handleChange("phone")}
-                      className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400"
+                      className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2 text-sm text-white shadow-sm outline-none transition placeholder:text-slate-500 focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                       placeholder="0803XXXXXXX or +234803XXXXXXX"
                     />
                     {errors.phone && (
@@ -880,7 +870,7 @@ const AIWorkflowAutomationPage = () => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="mt-2 inline-flex w-full items-center justify-center rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+                    className="mt-2 inline-flex w-full items-center justify-center rounded-full bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
                   >
                     {submitting ? "Submitting..." : "Submit Registration"}
                   </button>
@@ -894,7 +884,7 @@ const AIWorkflowAutomationPage = () => {
             )}
 
             {/* FAQ */}
-            <div className="rounded-3xl bg-slate-950/80 p-6 ring-1 ring-slate-800">
+            <div className="rounded-3xl bg-ink/80 p-6 ring-1 ring-slate-800">
               <h3 className="text-lg font-semibold tracking-tight">
                 Frequently Asked Questions
               </h3>
@@ -951,10 +941,7 @@ const AIWorkflowAutomationPage = () => {
       </section>
 
       {/* Final CTA */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 py-14">
-        <div className="pointer-events-none absolute inset-x-0 -top-24 flex justify-center opacity-40">
-          <Image src={FooterImage} alt="AI pattern" className="max-w-5xl" />
-        </div>
+      <section className="relative overflow-hidden bg-white/[0.03] py-14">
         <div className="relative mx-auto max-w-4xl px-4 text-center md:px-6 lg:px-8">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Ready to build the AI systems your team has been talking about?
@@ -967,13 +954,16 @@ const AIWorkflowAutomationPage = () => {
           <div className="mt-6 flex flex-wrap justify-center gap-4">
             <button
               onClick={scrollToForm}
-              className="rounded-full bg-emerald-400 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/30 transition hover:bg-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              className="rounded-full bg-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/30 transition hover:bg-brand-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
             >
               Register Now
             </button>
           </div>
         </div>
       </section>
+      <div className="bg-white">
+        <SiteFooter />
+      </div>
     </div>
   );
 };

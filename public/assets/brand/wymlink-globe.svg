@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -40 1100 900" width="1100" height="900">
+  <!-- Wymlink globe mark, redrawn as a vector from the website logo (public/assets/images/logo.png). -->
+  <defs>
+    <clipPath id="globe">
+      <ellipse cx="520" cy="410" rx="330" ry="385" transform="rotate(-4 520 410)" />
+    </clipPath>
+  </defs>
+
+  <!-- Orbit, back half (behind the globe) -->
+  <g transform="rotate(-20 500 400)" fill="none" stroke-linecap="round">
+    <path d="M 12 400 A 488 165 0 0 1 988 400" stroke="#1e1a22" stroke-width="88" />
+    <path d="M 12 400 A 488 165 0 0 1 988 400" stroke="#ffffff" stroke-width="46" />
+  </g>
+
+  <!-- Globe -->
+  <g clip-path="url(#globe)">
+    <!-- Ocean -->
+    <rect x="0" y="0" width="1000" height="820" fill="#b9997f" />
+    <!-- Americas (left) -->
+    <path
+      fill="#f2c48e"
+      d="M 150 20 L 420 20 C 410 60 370 85 375 130 C 380 170 340 200 352 245 C 364 290 330 320 355 365
+         C 380 410 362 470 400 515 C 432 552 418 610 455 660 L 480 820 L 120 820 Z"
+    />
+    <!-- Europe / Africa (centre) -->
+    <path
+      fill="#f2c48e"
+      d="M 500 55 C 535 42 575 52 582 88 C 590 125 560 148 568 186 C 576 224 612 248 598 296
+         C 586 336 556 356 572 400 C 586 438 556 464 538 432 C 522 398 538 362 522 324
+         C 506 286 532 246 518 208 C 504 170 474 112 500 55 Z"
+    />
+    <!-- Rim light (right edge) -->
+    <path fill="#f2c48e" d="M 900 100 C 860 165 832 215 822 272 C 810 335 800 385 765 432 C 730 480 720 560 690 620 C 670 660 650 720 640 820 L 960 820 Z" opacity="0.8" />
+
+    <!-- Grid: meridians and parallels, slightly tilted with the orbit -->
+    <g transform="rotate(-8 520 410)" fill="none" stroke="#1e1a22" stroke-width="24" stroke-linecap="round">
+      <ellipse cx="520" cy="410" rx="190" ry="390" />
+      <line x1="520" y1="10" x2="520" y2="810" />
+      <path d="M 150 200 Q 520 222 890 200" />
+      <path d="M 130 405 Q 520 432 910 405" />
+      <path d="M 150 610 Q 520 638 890 610" />
+    </g>
+  </g>
+
+  <!-- Globe outline -->
+  <ellipse cx="520" cy="410" rx="330" ry="385" transform="rotate(-4 520 410)" fill="none" stroke="#1e1a22" stroke-width="28" />
+
+  <!-- Orbit, front half (in front of the globe) -->
+  <g transform="rotate(-20 500 400)" fill="none" stroke-linecap="round">
+    <path d="M 988 400 A 488 165 0 0 1 12 400" stroke="#1e1a22" stroke-width="88" />
+    <path d="M 988 400 A 488 165 0 0 1 12 400" stroke="#ffffff" stroke-width="46" />
+  </g>
+</svg>

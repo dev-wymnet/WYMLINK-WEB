@@ -4,8 +4,8 @@ import { Post } from '@/lib/sanity/types'
 function estimateReadingMinutes(post: Post): number {
   const blocks = Array.isArray(post.body) ? post.body : []
   const text = blocks
-    .filter((b: any) => b?._type === 'block')
-    .map((b: any) => (Array.isArray(b.children) ? b.children.map((c: any) => c.text || '').join(' ') : ''))
+    .filter((b) => b?._type === 'block')
+    .map((b) => (Array.isArray(b.children) ? b.children.map((c) => ('text' in c && typeof c.text === 'string' ? c.text : '')).join(' ') : ''))
     .join(' ')
   const words = text.trim().split(/\s+/).filter(Boolean).length
   const minutes = Math.max(1, Math.round(words / 200))

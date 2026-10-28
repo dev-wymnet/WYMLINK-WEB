@@ -1,265 +1,213 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Use_Auth_Context } from "@/features/auth/api/auth_context";
-import { useRouter } from "next/navigation";
-import { App_Text } from "@/components/ui_components/app_text";
-import { App_Input } from "@/components/ui_components/app_input";
-import { App_Select } from "@/components/ui_components/app_select";
-import { App_Button } from "@/components/ui_components/app_button";
-import {
-  getElectricityPlans,
-  subscribeElectricity,
-  verifyElectricity,
-} from "@/features/bills/api/bills_endpoints";
-import { IoChevronBack } from "react-icons/io5";
-import PinInput from "@/components/ui_components/pin_input";
-import { App_Modal } from "@/components/ui_components/app_modal";
+import { useEffect, useState } from "react";
+import { IcBadgeCheck } from "@/components/app/icons";
+import { Alert, Button, Card, CopyButton, Field, PageHeader, SelectField, Skeleton, cx } from "@/components/app/ui";
+import { FAILED_BODY, Outcome, PENDING_BODY } from "@/components/app/outcome";
+import { PinSheet } from "@/components/app/pin_sheet";
+import { useAccount } from "@/features/app/account_context";
+import { errorMessage, newReference } from "@/lib/api/client";
+import { bills, findToken, purchaseOutcome, type ElectricityPlan, type PurchaseOutcome } from "@/lib/api/wymlink";
 
-// Module-level cache so revisits don't refetch or flash empty selects
-let cachedElectricityPlans: Array<{
-  plan_code: string;
-  plan_name: string;
-  min_amount: number;
-  max_amount: number;
-}> | null = null;
+type Done = { status: PurchaseOutcome; body: string; token: string | null; prepaid: boolean };
+import { naira, normalizeNgPhone, toNumber } from "@/lib/format";
 
-export default function ElectricityBillsPage() {
-  const router = useRouter();
-  const { isHydrated, isAuthenticated } = Use_Auth_Context();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const [plans, setPlans] = useState<
-    Array<{
-      plan_code: string;
-      plan_name: string;
-      min_amount: number;
-      max_amount: number;
-    }>
-  >(cachedElectricityPlans ?? []);
-  const [selectedPlan, setSelectedPlan] = useState<string>("");
-
-  const [meter, setMeter] = useState("");
+export default function ElectricityPage() {
+  const { home, refresh } = useAccount();
+  const [discos, setDiscos] = useState<ElectricityPlan[] | null>(null);
+  const [disco, setDisco] = useState("");
   const [type, setType] = useState<"prepaid" | "postpaid">("prepaid");
+  const [meter, setMeter] = useState("");
+  const [customer, setCustomer] = useState<string | null>(null);
+  const [amount, setAmount] = useState("");
   const [phone, setPhone] = useState("");
-  const [customerName, setCustomerName] = useState<string | null>(null);
-  const [amount, setAmount] = useState<number>(0);
-  const [showPin, setShowPin] = useState(false);
-  const [pin, setPin] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [reference, setReference] = useState<string | null>(null);
+  const [done, setDone] = useState<Done | null>(null);
+  const balance = home?.wallet.balance ?? 0;
+  const chosen = discos?.find((d) => d.plan_code === disco);
+  const min = chosen?.min_amount ?? 1000;
+  const max = chosen?.max_amount ?? 500000;
 
   useEffect(() => {
-    if (!isHydrated) return;
-    if (!isAuthenticated) router.replace("/auth/login");
-  }, [isHydrated, isAuthenticated, router]);
+    bills
+      .electricityPlans()
+      .then((r) => setDiscos(r.plans ?? []))
+      .catch((e) => setError(errorMessage(e)));
+  }, []);
 
-  useEffect(() => {
-    if (!isHydrated || !isAuthenticated) return;
-    const bootstrap = async () => {
-      try {
-        const resp = await getElectricityPlans();
-        const list = (resp.plans ?? []).map((p) => ({
-          plan_code: p.plan_code,
-          plan_name: p.plan_name,
-          min_amount: Number(p.min_amount ?? 0),
-          max_amount: Number(p.max_amount ?? 0),
-        }));
-        setPlans(list);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Unable to load plans");
-      }
-    };
-    void bootstrap();
-  }, [isAuthenticated, isHydrated]);
-
-  useEffect(() => {
-    // Reset verification on inputs change
-    setCustomerName(null);
-  }, [meter, selectedPlan, type]);
-
-  const canVerify = useMemo(
-    () => meter.trim().length >= 6 && selectedPlan && type,
-    [meter, selectedPlan, type],
-  );
-  const canSubmit = useMemo(
-    () => canVerify && phone.trim().length >= 6 && amount > 0,
-    [canVerify, phone, amount],
-  );
-
-  const handleVerify = async () => {
+  const verify = async () => {
+    if (!disco) return setError("Choose your electricity company first.");
+    if (meter.length < 6) return setError("Enter a valid meter number.");
+    setVerifying(true);
     setError(null);
-    setCustomerName(null);
+    setCustomer(null);
     try {
-      const resp = await verifyElectricity({ meter, plan: selectedPlan, type });
-      setCustomerName(resp.customer_name ?? null);
+      const r = await bills.verifyMeter(meter, disco, type);
+      if (!r.customer_name) throw new Error(r.message ?? "We couldn't find that meter.");
+      setCustomer(r.customer_name);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Verification failed");
-    }
-  };
-
-  const handlePurchase = async () => {
-    setShowPin(true);
-  };
-
-  const confirmPurchase = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const internalReference = `electricity-${Date.now().toString(36)}`;
-      await subscribeElectricity({
-        internalReference,
-        meter,
-        plan: selectedPlan,
-        amount,
-        type,
-        phone,
-        transactionPin: pin,
-      });
-      router.push("/dashboard/transactions");
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Unable to process payment";
-      setError(msg);
+      setError(errorMessage(e));
     } finally {
-      setLoading(false);
-      setShowPin(false);
-      setPin("");
+      setVerifying(false);
     }
   };
+
+  if (done) {
+    return (
+      <div className="mx-auto max-w-2xl">
+        <Card>
+          <Outcome
+            status={done.status}
+            title={done.status === "success" ? "Payment successful" : done.status === "pending" ? "Payment processing" : "Payment failed"}
+            body={done.status === "success" ? done.body : done.status === "pending" ? PENDING_BODY : FAILED_BODY}
+            againLabel="Pay another"
+            onAgain={() => setDone(null)}
+          >
+            {done.status === "success" && done.prepaid && (
+              <div className="mt-2 w-full max-w-sm rounded-2xl border border-line bg-canvas p-4">
+                <p className="text-xs text-ink-soft">Your token</p>
+                {done.token ? (
+                  <div className="mt-1 flex items-center justify-center gap-2">
+                    <p className="font-mono text-xl font-semibold tracking-wider text-ink tabular-nums">{done.token}</p>
+                    <CopyButton value={done.token.replace(/\s/g, "")} label="" />
+                  </div>
+                ) : (
+                  <p className="mt-1 text-sm text-ink-soft">Your token will arrive by SMS on the phone number you entered.</p>
+                )}
+              </div>
+            )}
+          </Outcome>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-background px-2 py-6 lg:px-10">
-      <div className="mx-auto w-full max-w-2xl">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="inline-flex items-center justify-center rounded-xl border border-border bg-surface p-2 text-secondary transition hover:bg-primarySoft"
-            aria-label="Go back"
+    <div className="mx-auto flex max-w-2xl flex-col gap-6">
+      <PageHeader title="Electricity" subtitle="Buy prepaid tokens or pay postpaid bills." />
+      <Card>
+        {!discos ? (
+          <Skeleton className="h-56" />
+        ) : (
+          <form
+            className="flex flex-col gap-5"
+            onSubmit={(e) => {
+              e.preventDefault();
+              const amt = toNumber(amount);
+              if (!customer) return setError("Verify the meter number first.");
+              if (amt < min || amt > max) return setError(`Enter an amount between ${naira(min, { whole: true })} and ${naira(max, { whole: true })}.`);
+              if (amt > balance) return setError(`Not enough balance (${naira(balance)}). Add money first.`);
+              if (!normalizeNgPhone(phone)) return setError("Enter a valid phone number for the token SMS.");
+              setError(null);
+              setReference(newReference("elc"));
+            }}
           >
-            <IoChevronBack size={18} />
-          </button>
-          <App_Text variant="title">Electricity Payment</App_Text>
-        </div>
-
-        <section className="mt-6 rounded-3xl border border-border bg-surface p-6 shadow-panel/10">
-          <div className="grid gap-5">
-            <div>
-              <App_Text variant="caption">Provider</App_Text>
-              <App_Select
-                id="plan"
-                label="Distribution Company"
-                value={selectedPlan}
-                onChange={(v) => setSelectedPlan(v)}
-                options={plans.map((p) => ({
-                  label: p.plan_name,
-                  value: p.plan_code,
-                }))}
-                placeholder="Choose provider"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <App_Input
-                id="meter"
-                label="Meter Number"
-                value={meter}
-                onChange={(e) => setMeter(e.currentTarget.value)}
-              />
-              <App_Select
-                id="type"
-                label="Type"
-                value={type}
-                onChange={(v) => setType(v as any)}
-                options={[
-                  { label: "Prepaid", value: "prepaid" },
-                  { label: "Postpaid", value: "postpaid" },
-                ]}
-                placeholder="Meter type"
-              />
-            </div>
-
-            <App_Input
-              id="amount"
-              label="Amount (NGN)"
-              type="number"
-              min={100}
-              step={50}
-              value={amount ? String(amount) : ""}
-              onChange={(e) => setAmount(Number(e.currentTarget.value || 0))}
-            />
-
-            <App_Input
-              id="phone"
-              label="Phone"
-              value={phone}
-              onChange={(e) => setPhone(e.currentTarget.value)}
-            />
-
-            <div className="flex items-center gap-3">
-              <App_Button
-                onClick={handleVerify}
-                disabled={!canVerify}
-                variant="secondary"
-              >
-                Verify Meter
-              </App_Button>
-              {customerName ? (
-                <App_Text variant="body" className="text-success">
-                  Verified: {customerName}
-                </App_Text>
-              ) : null}
-            </div>
-
-            {error ? <p className="text-sm text-error">{error}</p> : null}
-
-            <App_Button
-              onClick={handlePurchase}
-              disabled={!canSubmit}
-              loading={loading}
-              className="w-full"
+            <SelectField
+              label="Electricity company"
+              value={disco}
+              onChange={(e) => {
+                setDisco(e.target.value);
+                setCustomer(null);
+              }}
             >
-              Pay Electricity Bill
-            </App_Button>
-          </div>
-        </section>
-        <App_Modal
-          open={showPin}
-          onClose={() => {
-            if (!loading) {
-              setShowPin(false);
-              setPin("");
-            }
-          }}
-          title="Enter Transaction PIN"
-          footer={
-            <>
-              <App_Button
-                variant="secondary"
-                onClick={() => setShowPin(false)}
-                disabled={loading}
-              >
-                Cancel
-              </App_Button>
-              <App_Button
-                onClick={confirmPurchase}
-                disabled={pin.length !== 4}
-                loading={loading}
-              >
-                Confirm Payment
-              </App_Button>
-            </>
-          }
-        >
-          <App_Text variant="body" className="text-secondary">
-            For your security, confirm this payment with your 4-digit
-            transaction PIN.
-          </App_Text>
-          <div className="flex justify-center py-2">
-            <PinInput length={4} onChange={setPin} disabled={loading} />
-          </div>
-        </App_Modal>
-      </div>
-    </main>
+              <option value="">Choose your DisCo</option>
+              {discos.map((d) => (
+                <option key={d.plan_code} value={d.plan_code}>
+                  {d.plan_name}
+                </option>
+              ))}
+            </SelectField>
+
+            <div>
+              <p className="mb-2 text-sm font-medium text-ink">Meter type</p>
+              <div className="grid grid-cols-2 gap-2">
+                {(["prepaid", "postpaid"] as const).map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => {
+                      setType(t);
+                      setCustomer(null);
+                    }}
+                    aria-pressed={type === t}
+                    className={cx("rounded-xl border-2 py-3 text-sm font-semibold capitalize transition", type === t ? "border-brand-600 bg-brand-50 text-brand-700" : "border-line hover:border-brand-200")}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <Field
+              label="Meter number"
+              inputMode="numeric"
+              value={meter}
+              onChange={(e) => {
+                setMeter(e.target.value.replace(/\D/g, ""));
+                setCustomer(null);
+              }}
+              suffix={
+                <Button type="button" size="sm" variant="ghost" loading={verifying} onClick={() => void verify()}>
+                  Verify
+                </Button>
+              }
+            />
+            {customer && (
+              <div className="flex items-center gap-2 rounded-xl bg-ok-soft px-4 py-3 text-sm">
+                <IcBadgeCheck className="text-ok" /> <span className="font-medium text-ink">{customer}</span>
+              </div>
+            )}
+
+            <Field label="Amount" inputMode="numeric" prefix="₦" value={amount} onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))} hint={`Min ${naira(min, { whole: true })} · Balance ${naira(balance)}`} />
+            <Field label="Phone number" type="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} hint="We'll send the token here too." />
+
+            {error && <Alert tone="bad">{error}</Alert>}
+            <Button type="submit" block size="lg">
+              {toNumber(amount) ? `Pay ${naira(amount, { whole: true })}` : "Continue"}
+            </Button>
+          </form>
+        )}
+      </Card>
+
+      <PinSheet
+        open={reference !== null}
+        onClose={() => setReference(null)}
+        summary={
+          <dl className="grid grid-cols-2 gap-y-2 text-sm">
+            <dt className="text-ink-soft">DisCo</dt>
+            <dd className="text-right font-medium">{chosen?.plan_name}</dd>
+            <dt className="text-ink-soft">Meter</dt>
+            <dd className="text-right font-medium">
+              {meter} · {customer}
+            </dd>
+            <dt className="text-ink-soft">Amount</dt>
+            <dd className="text-right font-semibold">{naira(amount)}</dd>
+          </dl>
+        }
+        onConfirm={async (transactionPin) => {
+          const tx = await bills.buyElectricity({
+            internalReference: reference!,
+            meter,
+            plan: disco,
+            amount: toNumber(amount),
+            type,
+            phone: normalizeNgPhone(phone)!,
+            providerName: chosen?.plan_name,
+            transactionPin,
+          });
+          setReference(null);
+          setDone({
+            status: purchaseOutcome(tx),
+            body: `${naira(amount)} of electricity for ${customer} has been paid.`,
+            token: findToken(tx.providerResponse),
+            prepaid: type === "prepaid",
+          });
+          setAmount("");
+          void refresh();
+        }}
+      />
+    </div>
   );
 }
