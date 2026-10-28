@@ -7,7 +7,7 @@ import { adminApi } from "@/lib/api/admin";
 import { ROLE_LABEL, useAdmin } from "@/features/admin/admin_context";
 
 export default function AccountPage() {
-  const { admin, mustChangePassword, mfaEnrolled, reload } = useAdmin();
+  const { admin, mustChangePassword, mfaEnrolled, mfaRequired, reload } = useAdmin();
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -50,10 +50,12 @@ export default function AccountPage() {
           <div>
             <h2 className="text-lg font-semibold text-ink">Two-step sign-in</h2>
             <p className="mt-1 text-sm text-ink-soft">
-              Every sign-in needs your password and a code from your authenticator app. Lost your phone? Ask a super admin to reset it from the Staff page; you set it up again at your next sign-in.
+              {mfaRequired
+                ? "Every sign-in needs your password and a code from your authenticator app. Lost your phone? Ask a super admin to reset it from the Staff page; you set it up again at your next sign-in."
+                : "Switched off for everyone on the server (ADMIN_MFA_REQUIRED=false), so staff sign in with a password only. Switch it back on when testing is done."}
             </p>
           </div>
-          <Badge tone={mfaEnrolled ? "ok" : "warn"}>{mfaEnrolled ? "On" : "Not set up"}</Badge>
+          <Badge tone={!mfaRequired ? "bad" : mfaEnrolled ? "ok" : "warn"}>{!mfaRequired ? "Switched off" : mfaEnrolled ? "On" : "Not set up"}</Badge>
         </div>
       </Card>
 

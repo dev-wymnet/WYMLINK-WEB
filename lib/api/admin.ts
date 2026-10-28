@@ -114,8 +114,9 @@ export type StaffRole = "super_admin" | "business_admin" | "finance_admin";
 export type StaffMember = { id: string; firstName: string; lastName: string; email: string | null; phone: string | null; role: StaffRole | string; status: string; mfaEnrolled?: boolean; lastLoginAt: string | null; createdAt: string };
 
 // Sign-in step 1 (password) answers with the authenticator step; staff without an
-// authenticator yet also get the secret to add to one.
-export type AdminLoginStep = { step: "mfa"; enrollment: { secret: string; otpauthUrl: string } | null };
+// authenticator yet also get the secret to add to one. "done": two-step sign-in is
+// switched off on the backend, so the password alone signed in.
+export type AdminLoginStep = { step: "mfa"; enrollment: { secret: string; otpauthUrl: string } | null } | { step: "done" };
 
 export type CustomerTx = { id: string; type?: string; transactionType?: string; direction?: string; amount: string | number; status: string; createdAt: string; description?: string; reference?: string; referenceCode?: string };
 
@@ -144,7 +145,7 @@ export const adminApi = {
   login: (email: string, password: string) => call<AdminLoginStep>("/api/admin/session/login", { method: "POST", body: { email, password } }),
   verifyCode: (code: string) => call<{ admin: Admin }>("/api/admin/session/mfa", { method: "POST", body: { code } }),
   logout: () => call<void>("/api/admin/session/logout", { method: "POST", body: {} }),
-  me: () => bff<{ admin: Admin; permissions: string[]; mustChangePassword: boolean; mfaEnrolled: boolean }>("/auth/me"),
+  me: () => bff<{ admin: Admin; permissions: string[]; mustChangePassword: boolean; mfaEnrolled: boolean; mfaRequired?: boolean }>("/auth/me"),
   changePassword: (currentPassword: string, newPassword: string) =>
     bff<{ success: boolean }>("/auth/password", { method: "POST", body: { currentPassword, newPassword } }),
   customers: (q: { kycStatus?: string; search?: string; status?: string; page?: number; limit?: number }) =>

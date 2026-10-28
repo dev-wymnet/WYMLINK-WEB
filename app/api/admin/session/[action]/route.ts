@@ -56,7 +56,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ act
     } catch {
       return errorJson(503, "UPSTREAM_UNAVAILABLE", "We couldn't reach Wymlink. Please try again.");
     }
-    const json = r.json as ({ mfaToken?: string; mfaExpiresInSeconds?: number; enrollment?: unknown } & Upstream) | null;
+    const json = r.json as ({ mfaToken?: string; mfaExpiresInSeconds?: number; enrollment?: unknown; accessToken?: string; admin?: unknown } & Upstream) | null;
+    // Two-step sign-in switched off on the backend (ADMIN_MFA_REQUIRED=false): signed in already.
+    if (r.res.ok && json?.accessToken) {
+      await saveAdminSession(json as unknown as Parameters<typeof saveAdminSession>[0]);
+      return NextResponse.json({ step: "done", admin: json.admin ?? null });
+    }
     if (!r.res.ok || !json?.mfaToken) {
       // One generic message: never reveal whether the email is an admin account.
       if (r.res.status === 429) return errorJson(429, "RATE_LIMITED", json?.error?.code === "LOGIN_LOCKED" && json.error.message ? json.error.message : "Too many attempts. Wait a few minutes.");

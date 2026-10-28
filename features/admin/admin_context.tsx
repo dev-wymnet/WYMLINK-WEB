@@ -14,6 +14,8 @@ type AdminState = {
   // Staff given a temporary password must replace it before anything else.
   mustChangePassword: boolean;
   mfaEnrolled: boolean;
+  // False when two-step sign-in is switched off on the backend (ADMIN_MFA_REQUIRED=false).
+  mfaRequired: boolean;
   can: (permission: string) => boolean;
   signOut: (reason?: "idle" | "manual" | "expired") => Promise<void>;
   reload: () => Promise<void>;
@@ -27,6 +29,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [permissions, setPermissions] = useState<string[]>([]);
   const [mustChangePassword, setMustChangePassword] = useState(false);
   const [mfaEnrolled, setMfaEnrolled] = useState(false);
+  const [mfaRequired, setMfaRequired] = useState(true);
   const lastActive = useRef(0); // set when the idle timer starts
 
   const signOut = useCallback(
@@ -42,6 +45,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     setPermissions(r.permissions ?? []);
     setMustChangePassword(Boolean(r.mustChangePassword));
     setMfaEnrolled(Boolean(r.mfaEnrolled));
+    setMfaRequired(r.mfaRequired !== false);
   }, []);
   const reload = useCallback(() => adminApi.me().then(apply), [apply]);
 
@@ -80,12 +84,13 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       permissions,
       mustChangePassword,
       mfaEnrolled,
+      mfaRequired,
       // super_admin passes every check on the backend too.
       can: (p) => admin?.role === "super_admin" || permissions.includes(p),
       signOut,
       reload,
     }),
-    [admin, permissions, mustChangePassword, mfaEnrolled, signOut, reload],
+    [admin, permissions, mustChangePassword, mfaEnrolled, mfaRequired, signOut, reload],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

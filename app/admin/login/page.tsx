@@ -37,7 +37,10 @@ function AdminLogin() {
     setBusy(true);
     setError(null);
     try {
-      setStep(await adminApi.login(email.trim().toLowerCase(), password));
+      const next = await adminApi.login(email.trim().toLowerCase(), password);
+      // Two-step sign-in switched off on the backend: already signed in.
+      if (next.step === "done") return router.replace(safeAdminNext(params.get("next")));
+      setStep(next);
     } catch (err) {
       setError(errorMessage(err));
     } finally {
@@ -65,7 +68,7 @@ function AdminLogin() {
     }
   };
 
-  const enrollment = step?.enrollment;
+  const enrollment = step?.step === "mfa" ? step.enrollment : null;
 
   return (
     <div className="grid min-h-screen place-items-center bg-ink px-5 py-10">
