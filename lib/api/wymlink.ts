@@ -27,8 +27,8 @@ export type RecentTransaction = {
 };
 
 export type DashboardHome = {
-  user: { id: string; fullName: string; email: string | null; phone: string | null };
-  wallet: { balance: number; currency: string; accountNumber: string; bankName: string };
+  user: { id: string; fullName: string; email: string | null; phone: string | null; customerCode?: string | null };
+  wallet: { balance: number; currency: string; accountNumber: string; accountName?: string; bankName: string };
   analytics: { totalFunded: number; totalSpent: number; airtimePurchases: number; dataPurchases: number };
   recentTransactions: RecentTransaction[];
 };
@@ -44,7 +44,28 @@ export type LedgerRow = {
   description?: string | null;
   status: string;
   createdAt: string;
+  // A free event purchase (no ledger line: shown as "Free").
+  free?: boolean;
 };
+
+// A bill/airtime/data order (GET /orders). promo: bought free during an event.
+export type OrderRow = { id: string; product: string; planName: string | null; recipient: string; amount: string; status: string; promo?: boolean; createdAt: string };
+
+const PRODUCT_LABEL: Record<string, string> = { airtime: "airtime", data: "data", cable: "TV", electricity: "electricity" };
+// Free event orders as history rows (they never touch the wallet ledger).
+export const freeOrderRows = (orders: OrderRow[]): LedgerRow[] =>
+  orders
+    .filter((o) => o.promo)
+    .map((o) => ({
+      id: o.id,
+      transactionType: o.product,
+      direction: "debit",
+      amount: o.amount,
+      description: `Free ${o.planName && o.product !== "airtime" ? o.planName : PRODUCT_LABEL[o.product] ?? o.product} · ${o.recipient}`,
+      status: o.status,
+      createdAt: o.createdAt,
+      free: true,
+    }));
 
 export type Wallet = {
   balance: string | number;
@@ -57,6 +78,25 @@ export type VerificationItem = { status: "NONE" | "PENDING" | "VERIFIED" | "FAIL
 export type Verification = { bvn: VerificationItem; nin: VerificationItem };
 
 export type PinStatus = { transactionPinSet: boolean; lockedUntil: string | null };
+
+// A free-purchase event (backend modules/promo). event: null when none is running.
+export type PromoTvPlan = { provider: string; planCode: string; name: string; amount: string | null };
+export type PromoState = {
+  event: {
+    id: string;
+    title: string;
+    message: string;
+    dataMax: string;
+    airtimeMax: string;
+    tvPlans: PromoTvPlan[];
+    tvPerProvider: number;
+    startedAt: string;
+  } | null;
+  mine: { dataUsed: string; dataLeft: string; airtimeUsed: string; airtimeLeft: string; tvUsed: Record<string, number> } | null;
+};
+
+export type BusinessInfo = { code: string; name: string; acceptsPayments: boolean };
+export type TransferResult = { id: string; amount: string; status: "success" | "pending" | "failed"; counterparty: string | null; createdAt: string };
 
 export type AirtimeNetwork = { id: string; name: string };
 export type DataNetwork = { name: string; identifier: string };
@@ -142,6 +182,9 @@ export const wallet = {
   me: () => api<Wallet>("/wallets/me"),
   transactions: (limit = 50) => api<{ transactions: LedgerRow[] }>("/wallets/transactions", { query: { limit } }),
   transaction: (id: string) => api<{ transaction: LedgerRow }>(`/wallets/transactions/${encodeURIComponent(id)}`),
+  // The account number, or setup: "opening" while it is being opened (asking also retries).
+  account: () =>
+    api<{ account: { accountNumber: string; accountName: string; bankName: string } | null; setup: "opening" | null }>("/wallets/virtual-account"),
 };
 
 // ---------- Airtime & data ----------
@@ -150,9 +193,9 @@ export const wallet = {
 export const telecom = {
   networks: () => api<{ airtimeNetworks: AirtimeNetwork[]; dataNetworks: DataNetwork[] }>("/telecom/networks"),
   dataPlans: (network: string) => api<{ network: string; plans: DataPlan[] }>("/telecom/data/plans", { query: { network } }),
-  buyAirtime: (body: { internalReference: string; network: string; amount: number; mobileNumber: string; transactionPin: string }) =>
+  buyAirtime: (body: { internalReference: string; network: string; amount: number; mobileNumber: string; transactionPin: string; promo?: boolean }) =>
     api<{ transaction: PurchaseResult }>("/telecom/airtime/purchase", { method: "POST", body }).then((r) => r.transaction),
-  buyData: (body: { internalReference: string; network: string; planCode: string; mobileNumber: string; transactionPin: string }) =>
+  buyData: (body: { internalReference: string; network: string; planCode: string; mobileNumber: string; transactionPin: string; promo?: boolean }) =>
     api<{ transaction: PurchaseResult }>("/telecom/data/purchase", { method: "POST", body }).then((r) => r.transaction),
 };
 
@@ -162,7 +205,7 @@ export const bills = {
   cablePlans: (identifier: string) => api<{ plans: CablePlan[] }>("/bills/cable/plans", { query: { identifier } }),
   verifyCable: (identifier: string, iuc: string) =>
     api<{ customer_name?: string; status?: string; message?: string }>("/bills/cable/verify", { method: "POST", body: { identifier, iuc } }),
-  buyCable: (body: { internalReference: string; identifier: string; plan: string; iuc: string; phone: string; amount?: number; transactionPin: string }) =>
+  buyCable: (body: { internalReference: string; identifier: string; plan: string; iuc: string; phone: string; amount?: number; transactionPin: string; promo?: boolean }) =>
     api<{ transaction: PurchaseResult }>("/bills/cable/subscribe", { method: "POST", body }).then((r) => r.transaction),
   electricityPlans: () => api<{ plans: ElectricityPlan[] }>("/bills/electricity/plans"),
   verifyMeter: (meter: string, plan: string, type: "prepaid" | "postpaid") =>
@@ -177,6 +220,23 @@ export const bills = {
     providerName?: string;
     transactionPin: string;
   }) => api<{ transaction: PurchaseResult }>("/bills/electricity/subscribe", { method: "POST", body }).then((r) => r.transaction),
+};
+
+// ---------- Orders (airtime, data, bills) ----------
+export const orders = {
+  list: (limit = 50) => api<{ orders: OrderRow[] }>("/orders", { query: { limit } }).then((r) => r.orders ?? []),
+};
+
+// ---------- Free event ----------
+export const promo = {
+  current: () => api<PromoState>("/promo/current"),
+};
+
+// ---------- WymNet businesses (pay by QR code) ----------
+export const businesses = {
+  get: (code: string) => api<{ business: BusinessInfo }>(`/businesses/${encodeURIComponent(code)}`).then((r) => r.business),
+  pay: (code: string, body: { amount: string; transactionPin: string; reference: string }) =>
+    api<{ business: { code: string; name: string }; transfer: TransferResult }>(`/businesses/${encodeURIComponent(code)}/pay`, { method: "POST", body }),
 };
 
 // ---------- Bank payouts ----------

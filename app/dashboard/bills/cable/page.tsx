@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { IcBadgeCheck } from "@/components/app/icons";
+import { IcBadgeCheck, IcSparkles } from "@/components/app/icons";
+import { freeTvPlans } from "@/components/app/event";
 import { Alert, Button, Card, Field, PageHeader, SelectField, Skeleton, cx } from "@/components/app/ui";
 import { FAILED_BODY, Outcome, PENDING_BODY } from "@/components/app/outcome";
 import { PinSheet } from "@/components/app/pin_sheet";
@@ -11,9 +12,10 @@ import { bills, purchaseOutcome, type CablePlan, type PurchaseOutcome } from "@/
 import { naira, normalizeNgPhone, toNumber } from "@/lib/format";
 
 export default function CablePage() {
-  const { home, refresh } = useAccount();
+  const { home, refresh, promo } = useAccount();
   const [providers, setProviders] = useState<Array<{ identifier: string; name: string }> | null>(null);
-  const [provider, setProvider] = useState("");
+  // ?provider=gotv (from the event popup) opens on that provider.
+  const [provider, setProvider] = useState(() => (typeof window === "undefined" ? "" : (new URLSearchParams(window.location.search).get("provider") ?? "")));
   const [plans, setPlans] = useState<CablePlan[] | null>(null);
   const [planCode, setPlanCode] = useState("");
   const [iuc, setIuc] = useState("");
@@ -26,6 +28,9 @@ export default function CablePage() {
   const balance = home?.wallet.balance ?? 0;
   const plan = plans?.find((p) => p.plan_code === planCode) ?? null;
   const price = plan ? toNumber(plan.amount) : 0;
+  // During a free event, this provider's base plan is free (once per provider).
+  const freePlan = freeTvPlans(promo).find((p) => p.provider === provider) ?? null;
+  const isFree = Boolean(freePlan && planCode === freePlan.planCode);
 
   useEffect(() => {
     bills
@@ -91,7 +96,7 @@ export default function CablePage() {
               if (!customer) return setError("Verify the smartcard number first.");
               if (!plan) return setError("Choose a package.");
               if (!normalizeNgPhone(phone)) return setError("Enter a valid phone number for the receipt.");
-              if (price > balance) return setError(`Not enough balance (${naira(balance)}). Add money first.`);
+              if (!isFree && price > balance) return setError(`Not enough balance (${naira(balance)}). Add money first.`);
               setError(null);
               setReference(newReference("cab"));
             }}
@@ -135,11 +140,25 @@ export default function CablePage() {
                     <IcBadgeCheck className="text-ok" /> <span className="font-medium text-ink">{customer}</span>
                   </div>
                 )}
+                {freePlan && (
+                  <div className="flex items-center gap-3 rounded-2xl border border-brand-200 bg-brand-50 p-4">
+                    <IcSparkles className="shrink-0 text-2xl text-brand-600" aria-hidden />
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold text-ink">{freePlan.name} is free today</p>
+                      <p className="text-sm text-ink-soft">On us: nothing comes out of your balance.</p>
+                    </div>
+                    {!isFree && (
+                      <Button type="button" size="sm" onClick={() => setPlanCode(freePlan.planCode)} disabled={!plans}>
+                        Choose
+                      </Button>
+                    )}
+                  </div>
+                )}
                 <SelectField label="Package" value={planCode} onChange={(e) => setPlanCode(e.target.value)} disabled={!plans}>
                   <option value="">{plans ? "Choose a package" : "Loading packages…"}</option>
                   {plans?.map((p) => (
                     <option key={p.plan_code} value={p.plan_code}>
-                      {p.display ?? p.plan_code} — {naira(p.amount, { whole: true })}
+                      {p.display ?? p.plan_code} — {freePlan?.planCode === p.plan_code ? "FREE today" : naira(p.amount, { whole: true })}
                     </option>
                   ))}
                 </SelectField>
@@ -149,7 +168,7 @@ export default function CablePage() {
 
             {error && <Alert tone="bad">{error}</Alert>}
             <Button type="submit" block size="lg" disabled={!provider}>
-              {plan ? `Pay ${naira(price, { whole: true })}` : "Continue"}
+              {plan ? (isFree ? "Get it free" : `Pay ${naira(price, { whole: true })}`) : "Continue"}
             </Button>
           </form>
         )}
@@ -164,8 +183,8 @@ export default function CablePage() {
             <dd className="text-right font-semibold">{plan?.display}</dd>
             <dt className="text-ink-soft">Customer</dt>
             <dd className="text-right font-medium">{customer}</dd>
-            <dt className="text-ink-soft">Amount</dt>
-            <dd className="text-right font-semibold">{naira(price)}</dd>
+            <dt className="text-ink-soft">You pay</dt>
+            <dd className="text-right font-semibold">{isFree ? "Free, on Wymlink" : naira(price)}</dd>
           </dl>
         }
         onConfirm={async (transactionPin) => {
@@ -177,9 +196,10 @@ export default function CablePage() {
             phone: normalizeNgPhone(phone)!,
             amount: price,
             transactionPin,
+            ...(isFree ? { promo: true } : {}),
           });
           setReference(null);
-          setDone({ status: purchaseOutcome(tx), body: `${plan?.display} for ${customer} has been paid.` });
+          setDone({ status: purchaseOutcome(tx), body: `${plan?.display} for ${customer} has been ${isFree ? "activated, free, on us" : "paid"}.` });
           void refresh();
         }}
       />

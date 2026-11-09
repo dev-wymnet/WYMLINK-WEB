@@ -16,11 +16,17 @@ export function LedgerItem({ row, meta }: { row: LedgerRow; meta: string }) {
         <p className="text-xs text-ink-soft">{meta}</p>
       </div>
       <div className="text-right">
-        <p className={cx("font-semibold tabular-nums", credit ? "text-ok" : "text-ink")}>
-          <span className="sr-only">{credit ? "Received " : "Spent "}</span>
-          {credit ? "+" : "−"}
-          {naira(row.amount)}
-        </p>
+        {row.free ? (
+          <p className="font-semibold text-brand-700">
+            Free <span className="text-xs font-normal text-ink-faint line-through">{naira(row.amount)}</span>
+          </p>
+        ) : (
+          <p className={cx("font-semibold tabular-nums", credit ? "text-ok" : "text-ink")}>
+            <span className="sr-only">{credit ? "Received " : "Spent "}</span>
+            {credit ? "+" : "−"}
+            {naira(row.amount)}
+          </p>
+        )}
         <Badge tone={statusTone(row.status)}>{titleCase(row.status)}</Badge>
       </div>
     </>

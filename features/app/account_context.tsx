@@ -2,10 +2,10 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ApiError } from "@/lib/api/client";
-import { kyc, pin, wallet, type DashboardHome, type LedgerRow, type PinStatus, type Verification } from "@/lib/api/wymlink";
+import { freeOrderRows, kyc, orders, pin, promo as promoApi, wallet, type DashboardHome, type LedgerRow, type PinStatus, type PromoState, type Verification } from "@/lib/api/wymlink";
 
 // Everything the signed-in app needs to decide what to show: wallet + recent
-// activity, whether a transaction PIN exists, and KYC status.
+// activity, whether a transaction PIN exists, KYC status, and the free event (if one runs).
 
 type AccountState = {
   home: DashboardHome | null;
@@ -14,6 +14,8 @@ type AccountState = {
   recent: LedgerRow[] | null;
   pinStatus: PinStatus | null;
   verification: Verification | null;
+  // The running free event and this customer's allowance left (event: null when none).
+  promo: PromoState | null;
   loading: boolean;
   error: string | null;
   refresh: () => Promise<void>;
@@ -33,6 +35,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const [recent, setRecent] = useState<LedgerRow[] | null>(null);
   const [pinStatus, setPinStatus] = useState<PinStatus | null>(null);
   const [verification, setVerification] = useState<Verification | null>(null);
+  const [promo, setPromo] = useState<PromoState | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,14 +56,18 @@ export function AccountProvider({ children }: { children: ReactNode }) {
   const refresh = useCallback(async () => {
     setError(null);
     try {
-      const [h, r] = await Promise.all([
+      const [h, r, p, o] = await Promise.all([
         wallet.home(),
         wallet.transactions(6).catch(() => null),
+        promoApi.current().catch(() => null),
+        orders.list(10).catch(() => []),
         refreshPin().catch(() => undefined),
         refreshKyc().catch(() => undefined),
       ]);
       setHome(h);
-      setRecent(r?.transactions ?? []);
+      // Free event purchases have no ledger line: merge them in by time.
+      setRecent([...(r?.transactions ?? []), ...freeOrderRows(o)].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)).slice(0, 6));
+      setPromo(p);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't load your account.");
     } finally {
@@ -81,6 +88,7 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       recent,
       pinStatus,
       verification,
+      promo,
       loading,
       error,
       refresh,
@@ -89,9 +97,10 @@ export function AccountProvider({ children }: { children: ReactNode }) {
       needsPin,
       bvnVerified,
       ninVerified,
-      setupComplete: !needsPin && (bvnVerified || ninVerified),
+      // Identity checks only raise limits now: an account number comes with sign-up.
+      setupComplete: !needsPin,
     };
-  }, [home, recent, pinStatus, verification, loading, error, refresh, refreshPin, refreshKyc]);
+  }, [home, recent, pinStatus, verification, promo, loading, error, refresh, refreshPin, refreshKyc]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

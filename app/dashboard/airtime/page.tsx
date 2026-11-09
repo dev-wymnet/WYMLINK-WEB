@@ -10,6 +10,7 @@ import { useAccount } from "@/features/app/account_context";
 import { errorMessage, newReference } from "@/lib/api/client";
 import { purchaseOutcome, telecom, type AirtimeNetwork, type DataNetwork, type DataPlan, type PurchaseOutcome } from "@/lib/api/wymlink";
 import { guessNetwork, naira, normalizeNgPhone, toNumber } from "@/lib/format";
+import { FreeToggle, freeLeft } from "@/components/app/event";
 
 const NETWORK_STYLE: Record<string, string> = {
   mtn: "bg-[#ffcc00] text-black",
@@ -78,7 +79,12 @@ const resultScreen = (kind: "Airtime" | "Data", done: Done, onAgain: () => void)
 );
 
 function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
-  const { home, refresh } = useAccount();
+  const { home, refresh, promo } = useAccount();
+  // During a free event the allowance pays (unless switched off); the wallet is untouched.
+  const freeAirtime = freeLeft(promo).airtime;
+  const eventOn = Boolean(promo?.event) && freeAirtime > 0;
+  const [free, setFree] = useState(true);
+  const useFree = eventOn && free;
   const [phone, setPhone] = useState("");
   const [network, setNetwork] = useState("");
   const [amount, setAmount] = useState("");
@@ -100,7 +106,8 @@ function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
     if (!network) e.network = "Choose a network.";
     if (!amt || amt < 50) e.amount = "The minimum is ₦50.";
     else if (amt > 50000) e.amount = "The maximum per purchase is ₦50,000.";
-    else if (amt > balance) e.amount = `Not enough balance (${naira(balance)}). Add money first.`;
+    else if (useFree && amt > freeAirtime) e.amount = `You have ${naira(freeAirtime, { whole: true })} of free airtime left.`;
+    else if (!useFree && amt > balance) e.amount = `Not enough balance (${naira(balance)}). Add money first.`;
     setErrors(e);
     return !Object.keys(e).length;
   };
@@ -120,10 +127,20 @@ function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
         <Field label="Phone number" type="tel" inputMode="tel" autoComplete="tel" placeholder="0803 000 0000" value={phone} onChange={(e) => onPhone(e.target.value)} error={errors.phone} />
         <NetworkPicker items={networks} value={network} onChange={setNetwork} />
         {errors.network && <p className="-mt-3 text-sm text-bad">{errors.network}</p>}
+        {eventOn && <FreeToggle on={free} onChange={setFree} title="Free airtime today" detail={`${naira(freeAirtime, { whole: true })} left. Nothing comes out of your balance.`} />}
         <div className="flex flex-col gap-2">
-          <Field label="Amount" inputMode="numeric" prefix="₦" placeholder="0" value={amount} onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))} error={errors.amount} hint={`Balance: ${naira(balance)}`} />
+          <Field
+            label="Amount"
+            inputMode="numeric"
+            prefix="₦"
+            placeholder="0"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))}
+            error={errors.amount}
+            hint={useFree ? `Free allowance: ${naira(freeAirtime, { whole: true })} left` : `Balance: ${naira(balance)}`}
+          />
           <div className="flex flex-wrap gap-2">
-            {QUICK_AMOUNTS.map((a) => (
+            {QUICK_AMOUNTS.filter((a) => !useFree || a <= freeAirtime).map((a) => (
               <button
                 key={a}
                 type="button"
@@ -150,6 +167,8 @@ function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
             <dd className="text-right font-medium">
               {normalizeNgPhone(phone)} · {netName}
             </dd>
+            <dt className="text-ink-soft">You pay</dt>
+            <dd className="text-right font-semibold">{useFree ? "Free, on Wymlink" : naira(amount)}</dd>
           </dl>
         }
         onConfirm={async (transactionPin) => {
@@ -159,9 +178,10 @@ function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
             amount: toNumber(amount),
             mobileNumber: normalizeNgPhone(phone)!,
             transactionPin,
+            ...(useFree ? { promo: true } : {}),
           });
           setReference(null);
-          setDone({ status: purchaseOutcome(tx), body: `${naira(amount)} ${netName} airtime is on its way to ${normalizeNgPhone(phone)}.` });
+          setDone({ status: purchaseOutcome(tx), body: `${naira(amount)} ${netName} airtime is on its way to ${normalizeNgPhone(phone)}${useFree ? ", free, on us." : "."}` });
           setAmount("");
           void refresh();
         }}
@@ -171,7 +191,11 @@ function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
 }
 
 function DataForm({ networks }: { networks: DataNetwork[] }) {
-  const { home, refresh } = useAccount();
+  const { home, refresh, promo } = useAccount();
+  const freeData = freeLeft(promo).data;
+  const eventOn = Boolean(promo?.event) && freeData > 0;
+  const [free, setFree] = useState(true);
+  const useFree = eventOn && free;
   const [phone, setPhone] = useState("");
   const [network, setNetwork] = useState("");
   const [plans, setPlans] = useState<DataPlan[] | null>(null);
@@ -223,13 +247,16 @@ function DataForm({ networks }: { networks: DataNetwork[] }) {
           const errs: Record<string, string> = {};
           if (!normalizeNgPhone(phone)) errs.phone = "Enter a valid Nigerian phone number.";
           if (!plan) errs.plan = "Choose a data plan.";
-          else if (parsePlan(plan).amount > balance) errs.plan = `Not enough balance (${naira(balance)}). Add money first.`;
+          else if (useFree && parsePlan(plan).amount > freeData)
+            errs.plan = `That plan is more than your free data left (${naira(freeData, { whole: true })}). Choose a smaller plan, or switch off the free allowance to pay.`;
+          else if (!useFree && parsePlan(plan).amount > balance) errs.plan = `Not enough balance (${naira(balance)}). Add money first.`;
           setErrors(errs);
           if (!Object.keys(errs).length) setReference(newReference("dat"));
         }}
       >
         <Field label="Phone number" type="tel" inputMode="tel" autoComplete="tel" placeholder="0803 000 0000" value={phone} onChange={(e) => onPhone(e.target.value)} error={errors.phone} />
         <NetworkPicker items={items} value={network} onChange={chooseNetwork} />
+        {eventOn && <FreeToggle on={free} onChange={setFree} title="Free data today" detail={`${naira(freeData, { whole: true })} left. Plans marked Free cost you nothing.`} />}
         {network && (
           <div>
             <p className="mb-2 text-sm font-medium text-ink">Plan</p>
@@ -258,7 +285,13 @@ function DataForm({ networks }: { networks: DataNetwork[] }) {
                     >
                       <span className="block text-base font-semibold text-ink">{size}</span>
                       <span className="block text-xs text-ink-soft">{validity}</span>
-                      <span className="mt-1 block text-sm font-medium text-brand-700">{naira(amount, { whole: true })}</span>
+                      {useFree && amount <= freeData ? (
+                        <span className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-brand-700">
+                          Free <span className="text-xs font-normal text-ink-faint line-through">{naira(amount, { whole: true })}</span>
+                        </span>
+                      ) : (
+                        <span className="mt-1 block text-sm font-medium text-brand-700">{naira(amount, { whole: true })}</span>
+                      )}
                     </button>
                   );
                 })}
@@ -268,7 +301,7 @@ function DataForm({ networks }: { networks: DataNetwork[] }) {
           </div>
         )}
         <Button type="submit" block size="lg" disabled={!plan}>
-          {chosen ? `Buy ${chosen.size} for ${naira(chosen.amount, { whole: true })}` : "Continue"}
+          {chosen ? (useFree && chosen.amount <= freeData ? `Get ${chosen.size} free` : `Buy ${chosen.size} for ${naira(chosen.amount, { whole: true })}`) : "Continue"}
         </Button>
       </form>
       <PinSheet
@@ -283,8 +316,8 @@ function DataForm({ networks }: { networks: DataNetwork[] }) {
               </dd>
               <dt className="text-ink-soft">To</dt>
               <dd className="text-right font-medium">{normalizeNgPhone(phone)}</dd>
-              <dt className="text-ink-soft">Amount</dt>
-              <dd className="text-right font-semibold">{naira(chosen.amount)}</dd>
+              <dt className="text-ink-soft">You pay</dt>
+              <dd className="text-right font-semibold">{useFree ? "Free, on Wymlink" : naira(chosen.amount)}</dd>
             </dl>
           )
         }
@@ -295,9 +328,10 @@ function DataForm({ networks }: { networks: DataNetwork[] }) {
             planCode: plan!.plan_code,
             mobileNumber: normalizeNgPhone(phone)!,
             transactionPin,
+            ...(useFree ? { promo: true } : {}),
           });
           setReference(null);
-          setDone({ status: purchaseOutcome(tx), body: `${chosen?.size} data is on its way to ${normalizeNgPhone(phone)}.` });
+          setDone({ status: purchaseOutcome(tx), body: `${chosen?.size} data is on its way to ${normalizeNgPhone(phone)}${useFree ? ", free, on us." : "."}` });
           setPlan(null);
           void refresh();
         }}

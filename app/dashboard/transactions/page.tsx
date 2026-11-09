@@ -5,7 +5,7 @@ import { IcReceipt } from "@/components/app/icons";
 import { Alert, Badge, Card, CopyButton, Empty, Modal, PageHeader, Skeleton, cx, statusTone } from "@/components/app/ui";
 import { LedgerItem } from "@/components/app/ledger_item";
 import { errorMessage } from "@/lib/api/client";
-import { wallet, type LedgerRow } from "@/lib/api/wymlink";
+import { freeOrderRows, orders, wallet, type LedgerRow } from "@/lib/api/wymlink";
 import { dateTime, naira, relativeDay, titleCase } from "@/lib/format";
 
 type Filter = "all" | "in" | "out";
@@ -17,9 +17,9 @@ export default function TransactionsPage() {
   const [open, setOpen] = useState<LedgerRow | null>(null);
 
   useEffect(() => {
-    wallet
-      .transactions(200)
-      .then((r) => setRows(r.transactions ?? []))
+    // Ledger lines plus free event purchases (which never touch the ledger).
+    Promise.all([wallet.transactions(200), orders.list(200).catch(() => [])])
+      .then(([r, o]) => setRows([...(r.transactions ?? []), ...freeOrderRows(o)].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))))
       .catch((e) => setError(errorMessage(e)));
   }, []);
 

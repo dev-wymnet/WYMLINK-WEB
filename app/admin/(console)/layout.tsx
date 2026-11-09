@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { IcDocument, IcIdCard, IcKeyRound, IcLayoutDashboard, IcLifeBuoy, IcLogOut, IcShieldCheck, IcUsers, IcLandmark } from "@/components/app/icons";
+import { IcBuilding2, IcDocument, IcIdCard, IcKeyRound, IcLayoutDashboard, IcLifeBuoy, IcLogOut, IcShieldCheck, IcSparkles, IcUsers, IcLandmark } from "@/components/app/icons";
 import { Brand } from "@/components/app/brand";
 import { cx } from "@/lib/cx";
 import { AdminProvider, ROLE_LABEL, useAdmin } from "@/features/admin/admin_context";
 
 const NAV = [
   { href: "/admin", label: "Overview", icon: IcLayoutDashboard, exact: true },
+  { href: "/admin/event", label: "Free event", icon: IcSparkles },
+  { href: "/admin/businesses", label: "Businesses", icon: IcBuilding2 },
   { href: "/admin/kyc", label: "KYC reviews", icon: IcIdCard },
   { href: "/admin/customers", label: "Customers", icon: IcUsers },
   { href: "/admin/support", label: "Support", icon: IcLifeBuoy },

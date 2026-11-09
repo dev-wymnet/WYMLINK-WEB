@@ -19,6 +19,7 @@ import { Brand } from "@/components/app/brand";
 import { cx } from "@/components/app/ui";
 import { Use_Auth_Context } from "@/features/auth/api/auth_context";
 import { AccountProvider, useAccount } from "@/features/app/account_context";
+import { EventPopup } from "@/components/app/event";
 
 const NAV = [
   { href: "/dashboard", label: "Home", icon: IcHouse, exact: true },
@@ -45,9 +46,10 @@ function Shell({ children }: { children: ReactNode }) {
   const path = usePathname();
   const router = useRouter();
   const { user, logout } = Use_Auth_Context();
-  const { needsPin, bvnVerified, ninVerified, loading } = useAccount();
+  const { needsPin, loading } = useAccount();
   const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase() || "W";
-  const setupLeft = !loading && (needsPin || !(bvnVerified || ninVerified));
+  // Identity checks are optional now (they raise limits); only a missing PIN needs action.
+  const setupLeft = !loading && needsPin;
 
   const signOut = async () => {
     await logout();
@@ -105,6 +107,7 @@ function Shell({ children }: { children: ReactNode }) {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 pb-28 pt-6 sm:px-6 lg:pb-12">{children}</main>
+      <EventPopup />
       </div>
 
       {/* Bottom nav (mobile) */}

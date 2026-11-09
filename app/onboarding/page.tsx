@@ -2,22 +2,27 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { IcCircleCheck, IcFingerprint, IcIdCard, IcKeyRound, IcShieldCheck } from "@/components/app/icons";
+import { IcCircleCheck, IcKeyRound, IcLandmark } from "@/components/app/icons";
 import { Brand } from "@/components/app/brand";
 import { Button, Card, cx } from "@/components/app/ui";
 import { Use_Auth_Context } from "@/features/auth/api/auth_context";
 import { AccountProvider, useAccount } from "@/features/app/account_context";
-import { BvnForm, NinForm, SetPinFlow } from "@/features/app/security_flows";
+import { SetPinFlow } from "@/features/app/security_flows";
+import { safeNext } from "@/features/auth/components/sign_in";
 
-type Step = "welcome" | "pin" | "kyc" | "done";
+// Sign-up → PIN → ready. The account number is opened with the account (no BVN or NIN);
+// identity checks are optional, from Security & KYC, and only raise limits.
+type Step = "welcome" | "pin" | "done";
+
+// Where to go after setup: ?next= (e.g. a business pay page from a QR code) or the dashboard.
+const nextPath = () => safeNext(typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("next"));
 
 function Steps({ step }: { step: Step }) {
   const items: Array<{ id: Step; label: string }> = [
     { id: "pin", label: "PIN" },
-    { id: "kyc", label: "Identity" },
     { id: "done", label: "Ready" },
   ];
-  const order: Step[] = ["welcome", "pin", "kyc", "done"];
+  const order: Step[] = ["welcome", "pin", "done"];
   const at = order.indexOf(step);
   return (
     <ol className="flex items-center gap-2" aria-label="Setup progress">
@@ -47,16 +52,14 @@ function Steps({ step }: { step: Step }) {
 function Flow() {
   const router = useRouter();
   const { user } = Use_Auth_Context();
-  const { loading, needsPin, pinStatus, bvnVerified, ninVerified, refreshPin, refreshKyc } = useAccount();
+  const { loading, needsPin, pinStatus, refreshPin } = useAccount();
   const [step, setStep] = useState<Step>("welcome");
-  const [idMethod, setIdMethod] = useState<"bvn" | "nin">("bvn");
 
   // Resume where the user left off.
   useEffect(() => {
     if (loading) return;
-    if (pinStatus && !needsPin && (bvnVerified || ninVerified)) setStep("done");
-    else if (pinStatus && !needsPin) setStep((s) => (s === "welcome" ? "kyc" : s));
-  }, [loading, pinStatus, needsPin, bvnVerified, ninVerified]);
+    if (pinStatus && !needsPin) setStep("done");
+  }, [loading, pinStatus, needsPin]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -66,12 +69,12 @@ function Flow() {
           <div className="flex flex-col gap-6">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">Welcome to Wymlink, {user?.firstName}!</h1>
-              <p className="mt-2 text-ink-soft">Two quick steps keep your money safe and unlock your account number.</p>
+              <p className="mt-2 text-ink-soft">One quick step and you&apos;re in.</p>
             </div>
             <ul className="flex flex-col gap-3">
               {[
                 { icon: IcKeyRound, t: "Create a transaction PIN", b: "4 digits that approve every payment." },
-                { icon: IcShieldCheck, t: "Verify your identity", b: "Your BVN or NIN, as Nigerian rules require." },
+                { icon: IcLandmark, t: "Your account number", b: "Being set up for you now. No BVN or NIN needed." },
               ].map(({ icon: Icon, t, b }) => (
                 <li key={t} className="flex items-center gap-3 rounded-2xl bg-canvas p-4">
                   <span className="grid size-10 place-items-center text-2xl text-brand-600">
@@ -84,7 +87,7 @@ function Flow() {
                 </li>
               ))}
             </ul>
-            <Button block size="lg" onClick={() => setStep(needsPin || !pinStatus ? "pin" : "kyc")} disabled={loading}>
+            <Button block size="lg" onClick={() => setStep(needsPin || !pinStatus ? "pin" : "done")} disabled={loading}>
               Let&apos;s go
             </Button>
           </div>
@@ -96,52 +99,9 @@ function Flow() {
             <SetPinFlow
               onDone={async () => {
                 await refreshPin();
-                setStep("kyc");
+                setStep("done");
               }}
             />
-          </div>
-        )}
-
-        {step === "kyc" && (
-          <div className="flex flex-col gap-5">
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Verify your identity</h1>
-              <p className="mt-1 text-ink-soft">Choose one. You can add the other later from Security &amp; KYC.</p>
-            </div>
-            <div role="tablist" className="grid grid-cols-2 gap-2">
-              {[
-                { id: "bvn" as const, label: "BVN", icon: IcFingerprint },
-                { id: "nin" as const, label: "NIN", icon: IcIdCard },
-              ].map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  role="tab"
-                  aria-selected={idMethod === id}
-                  onClick={() => setIdMethod(id)}
-                  className={cx("flex items-center justify-center gap-2 rounded-xl border-2 py-3 font-medium", idMethod === id ? "border-brand-600 bg-brand-50 text-brand-700" : "border-line text-ink-soft")}
-                >
-                  <Icon /> {label}
-                </button>
-              ))}
-            </div>
-            {idMethod === "bvn" ? (
-              <BvnForm
-                onDone={async () => {
-                  await refreshKyc();
-                  setStep("done");
-                }}
-              />
-            ) : (
-              <NinForm
-                onDone={async () => {
-                  await refreshKyc();
-                  setStep("done");
-                }}
-              />
-            )}
-            <button onClick={() => router.replace("/dashboard")} className="text-sm font-medium text-ink-soft hover:text-ink">
-              I&apos;ll do this later
-            </button>
           </div>
         )}
 
@@ -151,9 +111,9 @@ function Flow() {
               <IcCircleCheck />
             </span>
             <h1 className="text-2xl font-semibold tracking-tight">You&apos;re all set</h1>
-            <p className="max-w-sm text-ink-soft">Add money to your Wymlink account number and start paying bills.</p>
-            <Button block size="lg" onClick={() => router.replace("/dashboard")}>
-              Go to my dashboard
+            <p className="max-w-sm text-ink-soft">Your account number is ready on your dashboard. Add money any time and start paying bills.</p>
+            <Button block size="lg" onClick={() => router.replace(nextPath())}>
+              Continue
             </Button>
           </div>
         )}
@@ -167,7 +127,7 @@ export default function OnboardingPage() {
   const { isHydrated, isAuthenticated } = Use_Auth_Context();
 
   useEffect(() => {
-    if (isHydrated && !isAuthenticated) router.replace("/auth/login?next=/onboarding");
+    if (isHydrated && !isAuthenticated) router.replace(`/auth/login?next=${encodeURIComponent("/onboarding" + window.location.search)}`);
   }, [isHydrated, isAuthenticated, router]);
 
   if (!isHydrated || !isAuthenticated) {

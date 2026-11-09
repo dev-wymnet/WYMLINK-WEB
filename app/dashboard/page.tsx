@@ -8,7 +8,6 @@ import {
   IcCircleCheck,
   IcEye,
   IcEyeOff,
-  IcIdCard,
   IcKeyRound,
   IcPlus,
   IcReceipt,
@@ -23,6 +22,8 @@ import { LedgerItem } from "@/components/app/ledger_item";
 import { Use_Auth_Context } from "@/features/auth/api/auth_context";
 import { useAccount } from "@/features/app/account_context";
 import { naira, relativeDay } from "@/lib/format";
+import { EventBanner } from "@/components/app/event";
+import { AccountNumberPending } from "@/components/app/account_pending";
 
 const ACTIONS = [
   { href: "/dashboard/airtime", label: "Airtime", icon: IcSmartphone },
@@ -33,13 +34,12 @@ const ACTIONS = [
 ];
 
 function Setup() {
-  const { needsPin, bvnVerified, ninVerified, pinStatus, loading } = useAccount();
+  const { needsPin, pinStatus, loading } = useAccount();
   if (loading) return null;
-  const kycDone = bvnVerified || ninVerified;
   const pinKnown = pinStatus !== null;
+  // Your account number comes with sign-up; identity checks (Security & KYC) only raise limits.
   const steps = [
     { done: pinKnown ? !needsPin : false, title: "Create your transaction PIN", body: "Approves every payment you make.", href: "/dashboard/security?setup=pin", icon: IcKeyRound },
-    { done: kycDone, title: "Verify your identity", body: "Add your BVN or NIN to unlock higher limits.", href: "/dashboard/security#kyc", icon: IcIdCard },
   ];
   const left = steps.filter((s) => !s.done);
   if (!left.length) return null;
@@ -116,7 +116,7 @@ function WalletCard() {
               </div>
             </div>
           ) : (
-            !loading && <p className="max-w-xs text-sm text-brand-100">Your account number appears here once your identity is verified.</p>
+            !loading && <AccountNumberPending className="max-w-xs text-sm text-brand-100" />
           )}
           <Button variant="light" href="/dashboard/fund">
             <IcPlus /> Add money
@@ -195,6 +195,8 @@ export default function DashboardHome() {
       )}
 
       <Setup />
+
+      <EventBanner />
 
       <div className="grid gap-6 lg:grid-cols-[1.3fr_1fr]">
         <WalletCard />

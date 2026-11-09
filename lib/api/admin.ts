@@ -199,4 +199,44 @@ export const adminApi = {
   collectAll: () => bff<{ attempted: number; results: (CollectResult & { userId: string; name: string })[] }>("/collections/run", { method: "POST", body: { all: true } }),
   collections: () => bff<{ collections: CollectionRow[] }>("/collections", { query: { limit: 100 } }),
   refreshCollection: (id: string) => bff<{ collection: CollectionRow }>(`/collections/${encodeURIComponent(id)}/refresh`, { method: "POST", body: {} }),
+
+  // Free event (promo): start/edit (super admin), end (any staff: the kill switch).
+  promo: () => bff<PromoOverview>("/promo"),
+  promoOrders: (id: string) => bff<{ orders: PromoOrder[] }>(`/promo/${encodeURIComponent(id)}/orders`, { query: { limit: 100 } }),
+  startPromo: (body: PromoSettings) => bff<{ event: PromoEventRow }>("/promo", { method: "POST", body }),
+  updatePromo: (id: string, body: Partial<PromoSettings>) => bff<{ event: PromoEventRow }>(`/promo/${encodeURIComponent(id)}`, { method: "PATCH", body }),
+  endPromo: (id: string) => bff<{ event: PromoEventRow }>(`/promo/${encodeURIComponent(id)}/end`, { method: "POST", body: {} }),
+
+  // WymNet businesses paid by QR code.
+  businesses: () => bff<{ businesses: BusinessRow[] }>("/businesses"),
+  createBusiness: (name: string) => bff<{ business: BusinessRow }>("/businesses", { method: "POST", body: { name } }),
+  openBusinessAccount: (id: string) => bff<{ business: BusinessRow }>(`/businesses/${encodeURIComponent(id)}/open-account`, { method: "POST", body: {} }),
+  setBusinessActive: (id: string, active: boolean) => bff<{ business: BusinessRow }>(`/businesses/${encodeURIComponent(id)}`, { method: "PATCH", body: { active } }),
+  businessPayments: (id: string) => bff<{ payments: BusinessPayment[] }>(`/businesses/${encodeURIComponent(id)}/payments`, { query: { limit: 100 } }),
 };
+
+export type PromoSettings = { title: string; message: string; dataMax: number; airtimeMax: number; tvPlans: string[]; tvPerProvider: number; budget: number | null };
+export type PromoEventRow = {
+  id: string; title: string; message: string; dataMax: string; airtimeMax: string; tvPlans: string[]; tvPerProvider: number;
+  budget: string | null; active: boolean; startedAt: string; endedAt: string | null;
+};
+export type PromoStats = {
+  byProduct: { product: string; delivered: number; deliveredAmount: string; pending: number; pendingAmount: string; failed: number }[];
+  customers: number; committed: string; budgetLeft: string | null; peyflexBalance: string | null; peyflexBalanceAt: string | null;
+};
+export type PromoOverview = {
+  active: PromoEventRow | null;
+  current: (PromoEventRow & { stats: PromoStats }) | null;
+  past: PromoEventRow[];
+  tvCatalogue: { provider: string; planCode: string; name: string; amount: string }[];
+};
+export type PromoOrder = {
+  id: string; customer: string; customerCode: string | null; product: string; service: string; planName: string | null;
+  recipient: string; amount: string; status: "success" | "pending" | "failed"; lastError: string | null; createdAt: string;
+};
+export type BusinessRow = {
+  id: string; name: string; code: string; active: boolean;
+  account: { accountNumber: string; accountName: string; bankName: string } | null;
+  balance: string; payments: { count: number; total: string; lastAt: string | null }; createdAt: string;
+};
+export type BusinessPayment = { id: string; payer: string; payerCode: string | null; amount: string; status: "success" | "pending" | "failed"; createdAt: string; completedAt: string | null };

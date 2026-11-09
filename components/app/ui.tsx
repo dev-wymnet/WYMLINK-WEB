@@ -241,19 +241,27 @@ export const CopyButton = ({ value, label = "Copy" }: { value: string; label?: s
 // ---------- Modal (sheet on mobile) ----------
 export const Modal = ({ open, onClose, title, children, dismissible = true }: { open: boolean; onClose: () => void; title: string; children: ReactNode; dismissible?: boolean }) => {
   const ref = useRef<HTMLDivElement>(null);
+  // The latest handlers, so the focus effect below runs only when the modal opens or closes.
+  // (Callers pass inline functions; re-running it on every render pulled focus off the
+  // field being typed in, e.g. the PIN boxes after each digit.)
+  const latest = useRef({ onClose, dismissible });
+  useEffect(() => {
+    latest.current = { onClose, dismissible };
+  });
   useEffect(() => {
     if (!open) return;
     const prev = document.activeElement as HTMLElement | null;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && dismissible && onClose();
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && latest.current.dismissible && latest.current.onClose();
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
-    ref.current?.focus();
+    // A field inside that focused itself (autoFocus) keeps the focus.
+    if (!ref.current?.contains(document.activeElement)) ref.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
       prev?.focus();
     };
-  }, [open, onClose, dismissible]);
+  }, [open]);
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 backdrop-blur-[2px] sm:items-center" onMouseDown={(e) => e.target === e.currentTarget && dismissible && onClose()}>
