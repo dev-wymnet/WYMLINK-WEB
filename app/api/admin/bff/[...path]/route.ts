@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import { backendBaseUrl, isSameOrigin, upstreamHeaders } from "@/lib/server/session";
 import { clearAdminSession, readAdminTokens, refreshAdminSession, saveAdminSession } from "@/lib/server/admin_session";
 
+// Bank and bill providers can take 20-30 s to answer (Moneta through its proxy): never
+// let the hosting platform cut a payment off before the backend answers.
+export const maxDuration = 60;
+
 // /api/admin/bff/<path> → <API>/admin/<path>, with the admin session cookie.
 // Only the admin API is reachable through here.
 

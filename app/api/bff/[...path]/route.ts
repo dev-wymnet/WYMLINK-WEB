@@ -9,6 +9,10 @@ import {
   saveSession,
 } from "@/lib/server/session";
 
+// Bank and bill providers can take 20-30 s to answer (Moneta through its proxy): never
+// let the hosting platform cut a payment off before the backend answers.
+export const maxDuration = 60;
+
 // Backend-for-frontend: /api/bff/<backend path> → <API_BASE_URL>/<backend path>.
 // Adds the access token from the httpOnly cookie, refreshes it once on a 401,
 // and never forwards admin or webhook routes from the browser.
