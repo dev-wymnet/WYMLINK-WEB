@@ -14,8 +14,9 @@ import { dateTime, naira, titleCase } from "@/lib/format";
 
 type Decision = { type: "bvn" | "nin" | "both"; decision: "approve" | "reject" };
 
-// The customer's Moneta account number. It opens by itself once BVN and NIN are both approved;
-// while it is opening the page checks again every few seconds.
+// The customer's Moneta account number. It comes with the account (no BVN or NIN needed);
+// viewing a customer without one starts (or retries) the opening, and the page checks again
+// every few seconds while it opens.
 function AccountCard({ customer }: { customer: CustomerDetail }) {
   const va = customer.virtualAccount;
   const setup = customer.accountSetup;
@@ -40,10 +41,8 @@ function AccountCard({ customer }: { customer: CustomerDetail }) {
               <span className="size-4 animate-spin rounded-full border-2 border-brand-100 border-t-brand-600" aria-hidden />
               Opening with Providus Bank. This page updates by itself, usually within a minute.
             </p>
-          ) : setup === "needs_details" ? (
-            <p className="mt-1 text-sm text-ink-soft">Verified before Wymlink kept the BVN for this. The customer gets their number by entering BVN and NIN once in the app (Add money).</p>
           ) : (
-            <p className="mt-1 text-sm text-ink-soft">Opens automatically as soon as both BVN and NIN are approved.</p>
+            <p className="mt-1 text-sm text-ink-soft">Being opened with Providus Bank. Refresh in a minute.</p>
           )}
         </div>
       </div>
@@ -338,7 +337,7 @@ export default function CustomerReviewPage() {
             <IcShieldAlert className="mt-0.5 shrink-0 text-warn" />
             <p className="text-ink">
               {decision?.decision === "approve"
-                ? "Only approve after checking the customer's documents. Approval unlocks higher limits, and once BVN and NIN are both approved their account number opens automatically."
+                ? "Only approve after checking the customer's documents. Approval unlocks higher limits."
                 : decision
                   ? "The customer will need to verify again before their limits increase."
                   : statusChange === "disabled"
