@@ -182,6 +182,10 @@ export const wallet = {
   home: () => api<DashboardHome>("/dashboard/home"),
   me: () => api<Wallet>("/wallets/me"),
   transactions: (limit = 50) => api<{ transactions: LedgerRow[] }>("/wallets/transactions", { query: { limit } }),
+  // Asking for the deposits list also makes the backend check the bank for a deposit whose
+  // notification never arrived (at most once every 10 minutes per customer).
+  deposits: (limit = 20) =>
+    api<{ deposits: Array<{ id: string; amount: string; status: string; receivedAt: string; creditedAt: string | null }> }>("/wallets/deposits", { query: { limit } }),
   transaction: (id: string) => api<{ transaction: LedgerRow }>(`/wallets/transactions/${encodeURIComponent(id)}`),
   // The account number, or setup: "opening" while it is being opened (asking also retries).
   account: () =>

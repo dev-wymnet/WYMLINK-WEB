@@ -4,9 +4,39 @@ import { IcBuilding2, IcClock, IcLoaderCircle, IcShieldCheck } from "@/component
 import { Alert, Card, CopyButton, PageHeader, Skeleton } from "@/components/app/ui";
 import { AccountNumberPending } from "@/components/app/account_pending";
 import { useAccount } from "@/features/app/account_context";
+import { useEffect, useRef } from "react";
+import { wallet } from "@/lib/api/wymlink";
+
+// While this page is open, check the bank for deposits every minute: a deposit whose
+// notification never reached us is found here and credited (the backend checks the bank
+// at most once every 10 minutes per customer, so this is cheap).
+function useDepositCheck(onNew: () => void) {
+  const seen = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    let alive = true;
+    const check = async () => {
+      try {
+        const { deposits } = await wallet.deposits(20);
+        const credited = deposits.filter((d) => d.status === "credited").map((d) => d.id);
+        if (!alive) return;
+        if (seen.current && credited.some((id) => !seen.current!.has(id))) onNew();
+        seen.current = new Set(credited);
+      } catch {
+        /* try again next minute */
+      }
+    };
+    void check();
+    const t = setInterval(check, 60_000);
+    return () => {
+      alive = false;
+      clearInterval(t);
+    };
+  }, [onNew]);
+}
 
 export default function FundPage() {
-  const { home, loading } = useAccount();
+  const { home, loading, refresh } = useAccount();
+  useDepositCheck(refresh);
   const w = home?.wallet;
   // Moneta names the account "MONETA TECH(WYMNET-<customer ID>)": banks show that name.
   const name = w?.accountName || home?.user.fullName;
