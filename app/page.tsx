@@ -178,7 +178,7 @@ export default function HomePage() {
           }
         />
         <Container>
-          <BrowserWindow src="/assets/app/web-dashboard.webp" alt="The Wymlink web dashboard" title="Wymlink dashboard" className="mt-16 sm:mt-[100px]" />
+          <BrowserWindow src="/assets/app/web-dashboard-teal.webp" alt="The Wymlink web dashboard" title="Wymlink dashboard" className="mt-16 sm:mt-[100px]" />
           <SectionHeading
             light
             className="mt-6 sm:mt-10"
