@@ -30,7 +30,10 @@ const prettyNetwork = (name: string) =>
       return m ? m[1] + m[2][0] + m[2].slice(1).toLowerCase() + m[3] : w;
     })
     .join(" ");
-const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000, 5000];
+// Peyflex refuses single airtime top-ups above about ₦1,000 ("Invalid input", seen live
+// 10 Nov: ₦100–₦1,000 delivered, every ₦4,000+ refused). Bigger amounts: buy more than once.
+const AIRTIME_MAX_PER_BUY = 1000;
+const QUICK_AMOUNTS = [100, 200, 500, 1000];
 
 // "1GB = N796 (7Days)" -> { size: "1GB", validity: "7 Days" }
 const parsePlan = (p: DataPlan) => {
@@ -105,7 +108,7 @@ function AirtimeForm({ networks }: { networks: AirtimeNetwork[] }) {
     if (!normalizeNgPhone(phone)) e.phone = "Enter a valid Nigerian phone number.";
     if (!network) e.network = "Choose a network.";
     if (!amt || amt < 50) e.amount = "The minimum is ₦50.";
-    else if (amt > 50000) e.amount = "The maximum per purchase is ₦50,000.";
+    else if (amt > AIRTIME_MAX_PER_BUY) e.amount = `Up to ${naira(AIRTIME_MAX_PER_BUY, { whole: true })} per purchase. Buy again for more.`;
     else if (useFree && amt > freeAirtime) e.amount = `You have ${naira(freeAirtime, { whole: true })} of free airtime left.`;
     else if (!useFree && amt > balance) e.amount = `Not enough balance (${naira(balance)}). Add money first.`;
     setErrors(e);
