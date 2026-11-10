@@ -218,15 +218,16 @@ export default function DashboardHome() {
         </Card>
       </div>
 
+      {/* Phones and tablets have Transfer in the bottom bar, so the row shows four larger buttons there. */}
       <section aria-label="Quick actions">
-        <ul className="grid grid-cols-5 gap-2 sm:gap-3">
+        <ul className="grid grid-cols-4 gap-2 sm:gap-3 lg:grid-cols-5">
           {ACTIONS.map(({ href, label, icon: Icon }) => (
-            <li key={label}>
+            <li key={label} className={label === "Transfer" ? "hidden lg:block" : undefined}>
               <Link href={href} className="flex flex-col items-center gap-2 rounded-2xl border border-line bg-white px-1 py-3 text-center transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)] sm:p-4">
                 <span className="grid size-10 place-items-center text-3xl text-brand-600 sm:size-12 sm:text-4xl">
                   <Icon aria-hidden />
                 </span>
-                <span className="text-[11px] font-medium text-ink sm:text-sm">{label}</span>
+                <span className="text-xs font-medium text-ink sm:text-sm">{label}</span>
               </Link>
             </li>
           ))}
