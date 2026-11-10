@@ -146,10 +146,10 @@ export default function HomePage() {
           }
         />
         <RevealGroup immediate className="relative mx-auto mt-14 h-[400px] max-w-[986px] sm:mt-[72px] sm:h-[553px]">
-          <DevicePhone src="/assets/app/discos.webp" alt="Choosing an electricity company in Wymlink" className="rv-phone-side absolute left-1/2 top-10 z-10 hidden -translate-x-[calc(50%+256px)] lg:block" style={rv(1600)} />
-          <DevicePhone src="/assets/app/airtime.webp" alt="Buying airtime: pick the network and amount" className="rv-phone-side absolute left-1/2 top-10 z-10 hidden translate-x-[calc(-50%+256px)] lg:block" style={rv(1600)} />
+          <DevicePhone src="/assets/app/discos-teal.webp" alt="Choosing an electricity company in Wymlink" className="rv-phone-side absolute left-1/2 top-10 z-10 hidden -translate-x-[calc(50%+256px)] lg:block" style={rv(1600)} />
+          <DevicePhone src="/assets/app/cable.webp" alt="Paying for cable TV: Startimes, GOtv or DStv" className="rv-phone-side absolute left-1/2 top-10 z-10 hidden translate-x-[calc(-50%+256px)] lg:block" style={rv(1600)} />
           <div className="rv-phone absolute left-1/2 top-0 z-20 w-[270px] -translate-x-1/2 sm:w-[323px]" style={rv(1500)}>
-            <DevicePhone src="/assets/app/home.webp" alt="The Wymlink home screen" priority sizes="(min-width: 640px) 323px, 270px" className="w-full" />
+            <DevicePhone src="/assets/app/home-teal.webp" alt="The Wymlink home screen" priority sizes="(min-width: 640px) 323px, 270px" className="w-full" />
           </div>
         </RevealGroup>
       </Panel>
