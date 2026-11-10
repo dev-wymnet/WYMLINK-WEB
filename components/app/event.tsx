@@ -11,8 +11,6 @@ import type { PromoState } from "@/lib/api/wymlink";
 // The free event (backend modules/promo): a popup when a signed-in customer arrives during
 // one, and a banner on the dashboard with what they have left.
 
-const SEEN_KEY = (id: string) => `wl-event-seen:${id}`;
-
 export const freeLeft = (promo: PromoState | null) => ({
   data: toNumber(promo?.mine?.dataLeft ?? 0),
   airtime: toNumber(promo?.mine?.airtimeLeft ?? 0),
@@ -58,27 +56,19 @@ function Allowances({ promo, onPick }: { promo: PromoState; onPick?: () => void 
   );
 }
 
-// Shown once per browser session for each event, as soon as the customer is in.
-const seenEvent = (id: string) => {
-  try {
-    return sessionStorage.getItem(SEEN_KEY(id)) === "1";
-  } catch {
-    return false;
-  }
-};
+// Shown on every visit to the dashboard (each page load or sign-in), like the app shows it
+// on every launch. Closing it hides it until the next visit, not while moving between pages.
+const seenThisVisit = new Set<string>();
 
 export function EventPopup() {
   const { promo } = useAccount();
   const id = promo?.event?.id ?? null;
   const [dismissed, setDismissed] = useState<string | null>(null);
-  // Rendered only in the signed-in (client-side) dashboard, so session storage is there.
-  const open = Boolean(id) && dismissed !== id && !seenEvent(id!);
+  const open = Boolean(id) && dismissed !== id && !seenThisVisit.has(id!);
 
   const close = () => {
     setDismissed(id);
-    try {
-      if (id) sessionStorage.setItem(SEEN_KEY(id), "1");
-    } catch {}
+    if (id) seenThisVisit.add(id);
   };
 
   if (!promo?.event) return null;
