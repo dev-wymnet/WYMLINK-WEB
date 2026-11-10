@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { IcSmartphone, IcSparkles, IcTv, IcWifi } from "@/components/app/icons";
+import { IcSmartphone, IcSparkles, IcTv, IcWifi, IcZap } from "@/components/app/icons";
 import { Button, Modal } from "@/components/app/ui";
 import { useAccount } from "@/features/app/account_context";
 import { naira, toNumber } from "@/lib/format";
@@ -16,6 +16,7 @@ const SEEN_KEY = (id: string) => `wl-event-seen:${id}`;
 export const freeLeft = (promo: PromoState | null) => ({
   data: toNumber(promo?.mine?.dataLeft ?? 0),
   airtime: toNumber(promo?.mine?.airtimeLeft ?? 0),
+  electricity: toNumber(promo?.mine?.electricityLeft ?? 0),
 });
 
 // Base TV plans still free for this customer (each provider counts separately).
@@ -30,6 +31,9 @@ function Allowances({ promo, onPick }: { promo: PromoState; onPick?: () => void 
   const rows = [
     { href: "/dashboard/airtime?tab=data", icon: IcWifi, label: "Data", value: left.data > 0 ? `${naira(left.data, { whole: true })} free` : "Used up", on: left.data > 0 },
     { href: "/dashboard/airtime", icon: IcSmartphone, label: "Airtime", value: left.airtime > 0 ? `${naira(left.airtime, { whole: true })} free` : "Used up", on: left.airtime > 0 },
+    ...(toNumber(promo.event?.electricityMax ?? 0) > 0
+      ? [{ href: "/dashboard/bills/electricity", icon: IcZap, label: "Electricity", value: left.electricity > 0 ? `${naira(left.electricity, { whole: true })} free` : "Used up", on: left.electricity > 0 }]
+      : []),
     ...(promo.event?.tvPlans ?? []).map((p) => {
       const on = tv.some((t) => t.planCode === p.planCode);
       return { href: `/dashboard/bills/cable?provider=${p.provider}`, icon: IcTv, label: `${tvLabel(p.provider)} ${p.name.replace(/^(gotv|dstv)\s*/i, "")}`, value: on ? "Free" : "Used", on };

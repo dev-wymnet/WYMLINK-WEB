@@ -17,6 +17,7 @@ const DEFAULTS: PromoSettings = {
   message: "Free data, airtime and TV today, on us! No money needed in your account. Just pick and buy.",
   dataMax: 8000,
   airtimeMax: 5000,
+  electricityMax: 0,
   tvPlans: ["gotv-easy", "dstv-starter36"],
   tvPerProvider: 1,
   budget: null,
@@ -63,6 +64,7 @@ function SettingsForm({ initial, catalogue, submitLabel, onSubmit }: { initial: 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Free data per customer" prefix="₦" inputMode="numeric" value={String(s.dataMax)} onChange={(e) => setS({ ...s, dataMax: num(e.target.value) })} hint="Also per phone number" />
         <Field label="Free airtime per customer" prefix="₦" inputMode="numeric" value={String(s.airtimeMax)} onChange={(e) => setS({ ...s, airtimeMax: num(e.target.value) })} hint="Also per phone number" />
+        <Field label="Free electricity per customer" prefix="₦" inputMode="numeric" value={String(s.electricityMax)} onChange={(e) => setS({ ...s, electricityMax: num(e.target.value) })} hint="Also per meter. 0 = not free" />
       </div>
       <div>
         <p className="mb-2 text-sm font-medium text-ink">Free TV plans (pick each provider&apos;s base plan)</p>
@@ -198,7 +200,7 @@ export default function EventPage() {
               })}
             </div>
             <p className="text-sm text-ink-soft">
-              Allowances: data {naira(ev.dataMax, { whole: true })}, airtime {naira(ev.airtimeMax, { whole: true })} per customer and per phone number. TV:{" "}
+              Allowances: data {naira(ev.dataMax, { whole: true })}, airtime {naira(ev.airtimeMax, { whole: true })} per customer and per phone number; electricity {Number(ev.electricityMax ?? 0) > 0 ? naira(ev.electricityMax, { whole: true }) : "not free"} per customer and per meter. TV:{" "}
               {ev.tvPlans.map((c) => data.tvCatalogue.find((t) => t.planCode === c)?.name ?? c).join(", ") || "none"}, {ev.tvPerProvider} per provider.
             </p>
             {superAdmin && !editing && (
@@ -211,7 +213,7 @@ export default function EventPage() {
             {superAdmin && editing && (
               <div className="border-t border-line pt-5">
                 <SettingsForm
-                  initial={{ title: ev.title, message: ev.message, dataMax: Number(ev.dataMax), airtimeMax: Number(ev.airtimeMax), tvPlans: ev.tvPlans, tvPerProvider: ev.tvPerProvider, budget: ev.budget === null ? null : Number(ev.budget) }}
+                  initial={{ title: ev.title, message: ev.message, dataMax: Number(ev.dataMax), airtimeMax: Number(ev.airtimeMax), electricityMax: Number(ev.electricityMax ?? 0), tvPlans: ev.tvPlans, tvPerProvider: ev.tvPerProvider, budget: ev.budget === null ? null : Number(ev.budget) }}
                   catalogue={data.tvCatalogue}
                   submitLabel="Save changes"
                   onSubmit={async (s) => {

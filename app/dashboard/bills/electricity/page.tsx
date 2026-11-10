@@ -5,6 +5,7 @@ import { IcBadgeCheck } from "@/components/app/icons";
 import { Alert, Button, Card, CopyButton, Field, PageHeader, SelectField, Skeleton, cx } from "@/components/app/ui";
 import { FAILED_BODY, Outcome, PENDING_BODY } from "@/components/app/outcome";
 import { PinSheet } from "@/components/app/pin_sheet";
+import { FreeToggle, freeLeft } from "@/components/app/event";
 import { useAccount } from "@/features/app/account_context";
 import { errorMessage, newReference } from "@/lib/api/client";
 import { bills, findToken, purchaseOutcome, type ElectricityPlan, type PurchaseOutcome } from "@/lib/api/wymlink";
@@ -13,7 +14,12 @@ type Done = { status: PurchaseOutcome; body: string; token: string | null; prepa
 import { naira, normalizeNgPhone, toNumber } from "@/lib/format";
 
 export default function ElectricityPage() {
-  const { home, refresh } = useAccount();
+  const { home, refresh, promo } = useAccount();
+  // During a free event with an electricity allowance, the allowance pays (unless switched off).
+  const freePower = freeLeft(promo).electricity;
+  const eventOn = Boolean(promo?.event) && freePower > 0;
+  const [free, setFree] = useState(true);
+  const useFree = eventOn && free;
   const [discos, setDiscos] = useState<ElectricityPlan[] | null>(null);
   const [disco, setDisco] = useState("");
   const [type, setType] = useState<"prepaid" | "postpaid">("prepaid");
@@ -98,7 +104,8 @@ export default function ElectricityPage() {
               const amt = toNumber(amount);
               if (!customer) return setError("Verify the meter number first.");
               if (amt < min || amt > max) return setError(`Enter an amount between ${naira(min, { whole: true })} and ${naira(max, { whole: true })}.`);
-              if (amt > balance) return setError(`Not enough balance (${naira(balance)}). Add money first.`);
+              if (useFree && amt > freePower) return setError(`You have ${naira(freePower, { whole: true })} of free electricity left. Enter a smaller amount, or switch Free off to pay from your balance.`);
+              if (!useFree && amt > balance) return setError(`Not enough balance (${naira(balance)}). Add money first.`);
               if (!normalizeNgPhone(phone)) return setError("Enter a valid phone number for the token SMS.");
               setError(null);
               setReference(newReference("elc"));
@@ -160,12 +167,13 @@ export default function ElectricityPage() {
               </div>
             )}
 
-            <Field label="Amount" inputMode="numeric" prefix="₦" value={amount} onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))} hint={`Min ${naira(min, { whole: true })} · Balance ${naira(balance)}`} />
+            {eventOn && <FreeToggle on={free} onChange={setFree} title="Free electricity today" detail={`${naira(freePower, { whole: true })} left. Nothing comes out of your balance.`} />}
+            <Field label="Amount" inputMode="numeric" prefix="₦" value={amount} onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))} hint={useFree ? `Min ${naira(min, { whole: true })} · Free left ${naira(freePower, { whole: true })}` : `Min ${naira(min, { whole: true })} · Balance ${naira(balance)}`} />
             <Field label="Phone number" type="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} hint="We'll send the token here too." />
 
             {error && <Alert tone="bad">{error}</Alert>}
             <Button type="submit" block size="lg">
-              {toNumber(amount) ? `Pay ${naira(amount, { whole: true })}` : "Continue"}
+              {toNumber(amount) ? (useFree ? `Get ${naira(amount, { whole: true })} free` : `Pay ${naira(amount, { whole: true })}`) : "Continue"}
             </Button>
           </form>
         )}
@@ -184,6 +192,8 @@ export default function ElectricityPage() {
             </dd>
             <dt className="text-ink-soft">Amount</dt>
             <dd className="text-right font-semibold">{naira(amount)}</dd>
+            <dt className="text-ink-soft">You pay</dt>
+            <dd className="text-right font-semibold">{useFree ? "Free, on Wymlink" : naira(amount)}</dd>
           </dl>
         }
         onConfirm={async (transactionPin) => {
@@ -196,11 +206,12 @@ export default function ElectricityPage() {
             phone: normalizeNgPhone(phone)!,
             providerName: chosen?.plan_name,
             transactionPin,
+            ...(useFree ? { promo: true } : {}),
           });
           setReference(null);
           setDone({
             status: purchaseOutcome(tx),
-            body: `${naira(amount)} of electricity for ${customer} has been paid.`,
+            body: `${naira(amount)} of electricity for ${customer} has been paid${useFree ? ", free, on us." : "."}`,
             token: findToken(tx.providerResponse),
             prepaid: type === "prepaid",
           });

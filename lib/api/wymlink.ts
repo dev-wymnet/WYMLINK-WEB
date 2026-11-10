@@ -88,11 +88,12 @@ export type PromoState = {
     message: string;
     dataMax: string;
     airtimeMax: string;
+    electricityMax?: string;
     tvPlans: PromoTvPlan[];
     tvPerProvider: number;
     startedAt: string;
   } | null;
-  mine: { dataUsed: string; dataLeft: string; airtimeUsed: string; airtimeLeft: string; tvUsed: Record<string, number> } | null;
+  mine: { dataUsed: string; dataLeft: string; airtimeUsed: string; airtimeLeft: string; electricityUsed?: string; electricityLeft?: string; tvUsed: Record<string, number> } | null;
 };
 
 export type BusinessInfo = { code: string; name: string; acceptsPayments: boolean };
@@ -219,6 +220,7 @@ export const bills = {
     phone: string;
     providerName?: string;
     transactionPin: string;
+    promo?: boolean;
   }) => api<{ transaction: PurchaseResult }>("/bills/electricity/subscribe", { method: "POST", body }).then((r) => r.transaction),
 };
 

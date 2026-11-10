@@ -215,9 +215,9 @@ export const adminApi = {
   businessPayments: (id: string) => bff<{ payments: BusinessPayment[] }>(`/businesses/${encodeURIComponent(id)}/payments`, { query: { limit: 100 } }),
 };
 
-export type PromoSettings = { title: string; message: string; dataMax: number; airtimeMax: number; tvPlans: string[]; tvPerProvider: number; budget: number | null };
+export type PromoSettings = { title: string; message: string; dataMax: number; airtimeMax: number; electricityMax: number; tvPlans: string[]; tvPerProvider: number; budget: number | null };
 export type PromoEventRow = {
-  id: string; title: string; message: string; dataMax: string; airtimeMax: string; tvPlans: string[]; tvPerProvider: number;
+  id: string; title: string; message: string; dataMax: string; airtimeMax: string; electricityMax?: string; tvPlans: string[]; tvPerProvider: number;
   budget: string | null; active: boolean; startedAt: string; endedAt: string | null;
 };
 export type PromoStats = {
