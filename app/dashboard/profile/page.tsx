@@ -8,6 +8,7 @@ import { Use_Auth_Context } from "@/features/auth/api/auth_context";
 import { useAccount } from "@/features/app/account_context";
 import { errorMessage } from "@/lib/api/client";
 import { profile } from "@/lib/api/wymlink";
+import { SUPPORT_ENABLED } from "@/lib/features";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -92,6 +93,7 @@ export default function ProfilePage() {
         </button>
       </Card>
 
+      {SUPPORT_ENABLED && (
       <Card>
         <div className="mb-4 flex items-center gap-3">
           <IcLifeBuoy className="text-xl text-brand-600" />
@@ -134,6 +136,7 @@ export default function ProfilePage() {
           </Button>
         </form>
       </Card>
+      )}
 
       <Button
         variant="danger"

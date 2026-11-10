@@ -17,6 +17,7 @@ import {
 } from "@/components/app/icons";
 import { Brand } from "@/components/app/brand";
 import { cx } from "@/components/app/ui";
+import { SUPPORT_ENABLED } from "@/lib/features";
 import { Use_Auth_Context } from "@/features/auth/api/auth_context";
 import { AccountProvider, useAccount } from "@/features/app/account_context";
 import { EventPopup } from "@/components/app/event";
@@ -82,9 +83,11 @@ function Shell({ children }: { children: ReactNode }) {
           })}
         </nav>
         <div className="flex flex-col gap-1 border-t border-line pt-4">
-          <a href="mailto:info@wymnet.org" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-canvas hover:text-ink">
-            <IcLifeBuoy className="text-lg" aria-hidden /> Help & support
-          </a>
+          {SUPPORT_ENABLED && (
+            <a href="mailto:info@wymnet.org" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-ink-soft hover:bg-canvas hover:text-ink">
+              <IcLifeBuoy className="text-lg" aria-hidden /> Help & support
+            </a>
+          )}
           <button onClick={signOut} className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[15px] font-medium text-ink-soft hover:bg-bad-soft hover:text-bad">
             <IcLogOut className="text-lg" aria-hidden /> Sign out
           </button>
