@@ -33,7 +33,7 @@ export function SignInForm() {
         if (!password) return setError("Enter your password.");
         const res = await login(method === "email" ? { email: id.trim().toLowerCase(), password } : { phone: phone!, password });
         if (!res.success) return setError(res.error === "Invalid credentials" ? "That email/phone and password don't match." : (res.error ?? "Couldn't sign in."));
-        router.replace(safeNext(params.get("next")));
+        window.location.assign(safeNext(params.get("next")));
       }}
     >
       <div role="tablist" className="grid grid-cols-2 gap-1 rounded-full bg-canvas p-1">

@@ -246,7 +246,7 @@ export const payouts = {
     api<{ accountNumber: string; accountName: string; bankCode: string; bankName: string | null }>("/payouts/validate-account", {
       query: { bankCode, accountNumber },
     }),
-  create: (body: { amount: string; bankCode: string; accountNumber: string; narration: string; transactionPin: string }) =>
+  create: (body: { reference: string; amount: string; bankCode: string; accountNumber: string; narration: string; transactionPin: string }) =>
     api<{ reference: string; status: string }>("/payouts", { method: "POST", body }),
   status: (reference: string) =>
     api<{ reference: string; status: string; providerReference: string | null }>("/payouts/status/by-reference", { query: { reference } }),

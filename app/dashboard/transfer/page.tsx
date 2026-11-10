@@ -5,7 +5,7 @@ import { IcBadgeCheck, IcCircleCheck, IcClock, IcSearch } from "@/components/app
 import { Alert, Button, Card, Field, PageHeader, Skeleton, cx } from "@/components/app/ui";
 import { PinSheet } from "@/components/app/pin_sheet";
 import { useAccount } from "@/features/app/account_context";
-import { errorMessage } from "@/lib/api/client";
+import { ApiError, errorMessage, newReference } from "@/lib/api/client";
 import { payouts, type Bank } from "@/lib/api/wymlink";
 import { naira, toNumber } from "@/lib/format";
 
@@ -225,15 +225,27 @@ export default function TransferPage() {
           </dl>
         }
         onConfirm={async (transactionPin) => {
-          const r = await payouts.create({
-            amount: String(toNumber(amount)),
-            bankCode: bank!.code,
-            accountNumber: account,
-            narration: note.trim() || `Transfer to ${name}`,
-            transactionPin,
-          });
-          setConfirming(false);
-          setResult(r);
+          // Made here so a slow answer can still be followed: the bank can take over a minute,
+          // longer than the website's server waits, and the transfer carries on regardless.
+          const reference = newReference("web");
+          try {
+            const r = await payouts.create({
+              reference,
+              amount: String(toNumber(amount)),
+              bankCode: bank!.code,
+              accountNumber: account,
+              narration: (note.trim() || `Transfer to ${name}`).slice(0, 100),
+              transactionPin,
+            });
+            setConfirming(false);
+            setResult(r);
+          } catch (e) {
+            const status = e instanceof ApiError ? e.status : 0;
+            // Refused before sending (wrong PIN, limits, balance): show it in the PIN sheet.
+            if (status >= 400 && status < 500 && status !== 408) throw e;
+            setConfirming(false);
+            setResult({ reference, status: "PENDING" });
+          }
           void refresh();
         }}
       />

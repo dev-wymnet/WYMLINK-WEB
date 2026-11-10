@@ -56,7 +56,7 @@ export function SignUpForm() {
         if (!res.success) return setError(res.error === "User already exists" ? "An account with this email or phone already exists. Sign in instead." : (res.error ?? "Couldn't create your account."));
         // Keep ?next= (e.g. a business pay page reached from a QR code) through onboarding.
         const next = new URLSearchParams(window.location.search).get("next");
-        router.replace(next ? `/onboarding?next=${encodeURIComponent(next)}` : "/onboarding");
+        window.location.assign(next ? `/onboarding?next=${encodeURIComponent(next)}` : "/onboarding");
       }}
     >
       <div className="grid gap-4 sm:grid-cols-2">
