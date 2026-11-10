@@ -63,7 +63,7 @@ export function SignUpForm() {
         <Field label="First name" autoComplete="given-name" value={f.firstName} onChange={set("firstName")} error={errors.firstName} />
         <Field label="Last name" autoComplete="family-name" value={f.lastName} onChange={set("lastName")} error={errors.lastName} />
       </div>
-      <p className="-mt-2 text-xs text-ink-soft">Use your name exactly as it appears on your BVN or NIN.</p>
+      <p className="-mt-2 text-xs text-ink-soft">Use your real name: it appears on your account.</p>
       <Field label="Email address" type="email" autoComplete="email" value={f.email} onChange={set("email")} error={errors.email} />
       <Field label="Phone number" type="tel" autoComplete="tel" placeholder="0803 000 0000" value={f.phone} onChange={set("phone")} error={errors.phone} />
       <div className="flex flex-col gap-2">

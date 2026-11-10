@@ -129,8 +129,8 @@ function SecurityPage() {
 
       <Card className="scroll-mt-24">
         <div id="kyc" className="mb-5">
-          <h2 className="font-semibold text-ink">Identity verification (KYC)</h2>
-          <p className="text-sm text-ink-soft">Nigerian law requires us to verify who you are. Verified accounts get higher daily limits.</p>
+          <h2 className="font-semibold text-ink">Raise your limits (optional)</h2>
+          <p className="text-sm text-ink-soft">Optional. You already have your account number: no BVN or NIN is needed for it. Verifying only raises your daily limits.</p>
         </div>
         {loading || !verification ? (
           <Skeleton className="h-24 w-full" />
